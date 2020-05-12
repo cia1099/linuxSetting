@@ -6,7 +6,14 @@ Linux
 ```
 sudo apt-get install build-essential #install make
 sudo apt-get install g++
+//----安裝新酷音
+sudo apt-get install ibus-chewing
+
+//-----安裝VSCode
+//先去官網下載.deb檔案
+sudo dpkg -i [code file name].deb
 ```
+[Ubuntu install Chewing](https://medium.com/@racktar7743/ubuntu-%E5%9C%A8-ubuntu-18-04-%E4%B8%AD%E6%96%B0%E5%A2%9E%E6%96%B0%E9%85%B7%E9%9F%B3%E8%BC%B8%E5%85%A5%E6%B3%95-4aa85782f656)
 * 檢查安裝包
 
 #### 1.  apt
@@ -28,6 +35,13 @@ dpkg --get-selections | grep 軟件名 #顯示軟件已安裝
  sudo apt-get --purge remove [安裝包名] #刪除單一包
  sudo apt autoremove [安裝包名] #刪除安裝包與相依包
  ```
+
+#### 3. 支援網頁播放視頻
+If those streaming services use DRM, you must enable DRM in Firefox's settings: Preferences -> General -> Play DRM-controlled content You might also have to install package libavcodec-extra to get the codecs:
+```
+sudo apt install libavcodec-extra
+```
+[Playing Videos in Firefox](https://askubuntu.com/questions/1035661/playing-videos-in-firefox)
 
 * 安裝CMake
 ```
