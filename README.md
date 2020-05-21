@@ -3,7 +3,7 @@
 Linux
 ----
  * 安裝環境
-```
+```shell
 sudo apt-get install build-essential #install make
 sudo apt-get install g++
 //----安裝新酷音
@@ -17,13 +17,13 @@ sudo dpkg -i [code file name].deb
 * 檢查安裝包
 
 #### 1.  apt
-```
+```shell
 apt-cache search all | grep xx
 apt-cache search all
 apt-cache search xx
 ```
 #### 2. dpkg
-```
+```shell
 dpkg -l #完整
 dpkg -l 軟件名
 whereis 軟件名
@@ -44,7 +44,7 @@ sudo apt install libavcodec-extra
 [Playing Videos in Firefox](https://askubuntu.com/questions/1035661/playing-videos-in-firefox)
 
 * 安裝CMake
-```
+```shell
 wget https://cmake.org/files/v3.15/cmake-3.15.6.tar.gz 
 tar xzvf cmake-3.15.6.tar.gz
 sudo apt-get install libncurses5-dev #in order to install ccmake 
@@ -57,7 +57,7 @@ make install
 
 * 圖形介面
 ##### 注意要先安裝Xming或VCXrc
-```
+```shell
 sudo apt install xfce4 xfce4-terminal  #注意命令里是xfce不是xface
 echo "export DISPLAY=:0" >> ~/.bashrc
 source ~/.bashrc
@@ -87,7 +87,7 @@ sudo apt-get install qtchooser
 sudo vim /usr/lib/x86_64-linux-gnu/qtchooser/default.conf
 ```
 把路径换为安装过的路径
-```
+```shell
 /opt/Qt5.11.3/5.11.3/gcc_64/bin
 /opt/Qt5.11.3
 ```
@@ -98,7 +98,7 @@ sudo vim /usr/lib/x86_64-linux-gnu/qtchooser/default.conf
 要注意dash（-）後有dev的才有包含header可以做編譯，最好都安裝帶有-dev的安裝包。
 在安裝VTK包時，會遇到相依性衝突，這大部分是libboost安裝包版本衝突造成，先刪除舊版libboost安裝包，
 直接安裝VTK會自動安裝相應的相依libboost版本包，之後再依對應的版本安裝完整的libboost包即可。
-```
+```shell
 sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev #安裝OpenGL
 sudo apt-get install doxygen #文檔生成庫
 
@@ -116,7 +116,7 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
 ```
 
 * PCL安裝
-```
+```shell
 sudo apt-get install  libboost-all-dev libeigen3-dev libflann-dev libusb-1.0-0-dev
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
@@ -134,16 +134,36 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
 如果想在 Windows 下查看 WSL 文件位置，文件位置在：C:\Users\用户名\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs 下。
 
 * 系統環境變量(待續)
-```
+```shell
 ### 查看環境變量
 env | grep PATH
 echo $PATH
 ```
 
+#### * Kdiff3安裝
+先去官網下載Kdiff3的tar.gz檔案，準備編譯環境，這裡是<span style="background-color:yellow">只裝Qt版的</span>
+```shell
+sudo apt-get install gettext qtbase5-dev qt5-qmake
+tar zxvf kdiff.tar.gz
+./config qt4 #就算沒裝qt4，只裝了qt5，也是建置qt5的版本
+# 安裝語言包
+cd .../kdiff3-0.9.98/po
+sh create_qm_files install
+sh create_qm_files local #上面失敗就再加這句
+
+#編輯 .gitconfig
+code /home/cia1099/.gitconfig
+### 編輯範例：
+[difftool "kdiff3"]
+	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$LOCAL\" \"$REMOTE\"
+[mergetool "kdiff3"]
+	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+```
+
 #### 安裝GPU
 [reference](https://gitpress.io/@chchang/install-nvidia-driver-cuda-pgstrom-in-ubuntu-1804)
 [Official](https://gist.github.com/wangruohui/df039f0dc434d6486f5d4d098aa52d07)
-```
+```shell
 sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt update
 sudo apt install ubuntu-drivers-common
@@ -162,7 +182,7 @@ nvidia-modprobe #將驅動手動啟動載入至系統
 選擇 Linux -- x86_64 -- Ubuntu -- 18.04 -- deb(local)
 畫面上就會有安裝步驟，照著做就沒問題了
 一樣，安裝完成後重新開機，然後來編譯一個 deviceQuery 的小程式來看看資訊
-```
+```shell
 cd /usr/local/cuda-10.2/samples/1_Utilities/deviceQuery
 sudo make
 ```
@@ -172,7 +192,7 @@ The recommended way for installing cuDNN is to first copy the `tgz` file to `/us
 
 * 讓vcpkg支援CUDA
 https://github.com/microsoft/vcpkg/issues/8247
-```
+```shell
 cd vcpkg
 export CUDA_PATH=/usr/local/cuda;
 export CUDA_BIN_PATH=/usr/local/cuda/bin;
