@@ -12,6 +12,9 @@ sudo apt-get install ibus-chewing
 //-----安裝VSCode
 //先去官網下載.deb檔案
 sudo dpkg -i [code file name].deb
+
+//------安裝小畫家
+sudo apt-get install kolourpaint //記得別裝到kolourpaint4，是舊版
 ```
 [Ubuntu install Chewing](https://medium.com/@racktar7743/ubuntu-%E5%9C%A8-ubuntu-18-04-%E4%B8%AD%E6%96%B0%E5%A2%9E%E6%96%B0%E9%85%B7%E9%9F%B3%E8%BC%B8%E5%85%A5%E6%B3%95-4aa85782f656)
 * 檢查安裝包
@@ -197,4 +200,30 @@ cd vcpkg
 export CUDA_PATH=/usr/local/cuda;
 export CUDA_BIN_PATH=/usr/local/cuda/bin;
 ./vcpkg install cuda
+```
+### 基本操作，參考實驗樓《Linux基礎入門》
+#### 文件查找
+有時候剛添加的文件，有可能會找不到，需要手動執行一次`updatedb`命令。
+* whereis簡單快速
+whereis只能搜索二進制文件(-b)、man幫助文檔(-m)和源代碼文件(-s)。
+* which小而精
+我們通常使用which來確定是否安裝了某個指定的程序，因為它只能從<font color=ff00ff>PATH</font>環境變量指定的路徑中去搜索命令並且返回第一個搜索到的結果。
+* find精而細
+注意find命令的路徑是作為第一個參數，基本命令格式為 find [path][option][action]
+```shell
+find /etc -name \*.list
+#查找在/etc底下所有.list有關聯的檔名
+```
+#### 簡單輸出
+```shell
+cat -n filename #輸出filename的內容於terminal，其中-n包含行號
+nl -b a filename #與'cat -n'相同
+tail -f filename 
+＃可以實時顯示filename內容的最後10行(默認10行，可以用'-n [INT]'來設定顯示的INT行)
+```
+#### 文件權限
+一個目錄同時具有讀權限和執行權限才可以打開並查看內部文件，而一個目錄要有寫權限才允許在其中創建其它文件
+```shell
+chmod 765 filename #將filename的權限修改成：擁有者(rwx)、所屬用戶(rw-)、其他用戶(r-x)
+chown [所有者] [filename] #將filename的所有者修改為[所有者]，可以用ll命令查看
 ```
