@@ -1,4 +1,14 @@
+<span id="contents"></span>
 # linuxSetting
+<a href="#contents">
+
+* Contents
+  * 安裝環境
+  * [3. 支援網頁播放視頻](#video)
+  * [安裝CMake](#cmake)
+  * [Kdiff3安裝](#kdiff3)
+  * [安裝GPU](#nvidia)
+  * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
 ----
@@ -39,6 +49,7 @@ dpkg --get-selections | grep 軟件名 #顯示軟件已安裝
  sudo apt autoremove [安裝包名] #刪除安裝包與相依包
  ```
 
+<span id="video"></span>
 #### 3. 支援網頁播放視頻
 If those streaming services use DRM, you must enable DRM in Firefox's settings: Preferences -> General -> Play DRM-controlled content You might also have to install package libavcodec-extra to get the codecs:
 ```
@@ -46,6 +57,7 @@ sudo apt install libavcodec-extra
 ```
 [Playing Videos in Firefox](https://askubuntu.com/questions/1035661/playing-videos-in-firefox)
 
+<span id="cmake"></span>
 * 安裝CMake
 ```shell
 wget https://cmake.org/files/v3.15/cmake-3.15.6.tar.gz 
@@ -54,9 +66,12 @@ sudo apt-get install libncurses5-dev #in order to install ccmake
 cd cmake-3.15.6
 cmake -D BUILD_CursesDialog=ON
 ./bootstrap --qt-gui
+# if qt-gui fail, check this command
+#sudo apt-get install qtbase5-dev #in order build qtbase cmake
 make -j8
 make install
 ```
+[返回目錄](#contents)
 
 * 圖形介面
 ##### 注意要先安裝Xming或VCXrc
@@ -142,8 +157,8 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
 env | grep PATH
 echo $PATH
 ```
-
-#### * Kdiff3安裝
+<span id="kdiff3"></span>
+#### Kdiff3安裝
 先去官網下載Kdiff3的tar.gz檔案，準備編譯環境，這裡是<span style="background-color:yellow">只裝Qt版的</span>
 ```shell
 sudo apt-get install gettext qtbase5-dev qt5-qmake
@@ -162,7 +177,8 @@ code /home/cia1099/.gitconfig
 [mergetool "kdiff3"]
 	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
 ```
-
+[返回目錄](#contents)
+<span id="nvidia"></span>
 #### 安裝GPU
 [reference](https://gitpress.io/@chchang/install-nvidia-driver-cuda-pgstrom-in-ubuntu-1804)
 [Official](https://gist.github.com/wangruohui/df039f0dc434d6486f5d4d098aa52d07)
@@ -201,7 +217,22 @@ export CUDA_PATH=/usr/local/cuda;
 export CUDA_BIN_PATH=/usr/local/cuda/bin;
 ./vcpkg install cuda
 ```
+[返回目錄](#contents)
+<span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
+<a href="#shiyanlou">
+Contents
+
+* 文件查找
+* [簡單輸出與文件權限](#outstream_authority)
+* [文件打包與解壓縮](#compress)
+* [查看磁盤和目錄容量](#disk)
+* [有選擇的執行命令](#command)
+* [簡單的文本處理](#context)
+* [數據流重定向](#stream)
+* ["挑戰3"統計文本內容](#challenge3)
+* [正則表達式](#regex)
+* ["挑戰4"數據提取](#challenge4)
 #### 文件查找
 有時候剛添加的文件，有可能會找不到，需要手動執行一次`updatedb`命令。
 * whereis簡單快速
@@ -215,6 +246,7 @@ find /etc -name \*.list
 #查找在/etc底下所有.list有關聯的檔名
 #注意要添加 * 號前面的反斜槓轉義，否則會無法找到
 ```
+<span id="outstream_authority"></span>
 #### 簡單輸出
 ```shell
 cat -n filename #輸出filename的內容於terminal，其中-n包含行號
@@ -231,6 +263,8 @@ sudo tail -f /var/log/syslog
 chmod 765 filename #將filename的權限修改成：擁有者(rwx)、所屬用戶(rw-)、其他用戶(r-x)
 chown [所有者] [filename] #將filename的所有者修改為[所有者]，可以用ll命令查看
 ```
+[返回實驗目錄](#shiyanlou)
+<span id="compress"></span>
 #### 文件打包與解壓縮
 1_1. zip壓縮打包程序
 ```shell
@@ -288,6 +322,8 @@ tar -tf shiyanlou.tar #只查看不解包文件 -t 參數
 tar -czf shiyanlou.tar.gz /home/shiyanlou/Desktop
 tar -xzf shiyanlou.tar.gz #解壓 *.tar.gz 文件，-x解包
 ```
+[返回實驗目錄](#shiyanlou)
+<span id="disk"></span>
 #### 查看磁盤和目錄容量
 ```shell
 #查看硬碟的容量
@@ -302,6 +338,7 @@ du -hsx * | sort -rh | head -10
 ls -l /lib/modules/$(uname -r)/kernel/fs #查看Linux支持哪些文件系統
 ```
 
+<span id="command"></span>
 #### 有選擇的執行命令
 ```shell
 which cmatrix>/dev/null && echo "exist" || echo "not exist"
@@ -340,7 +377,8 @@ ll -a | grep ".$" #多字串符""沒啥用，其中$就表示一行的末尾
 #---統計 /etc 下面所有目錄數
 ls -dl /etc/*/ | wc -l
 ```
-
+[返回實驗目錄](#shiyanlou)
+<span id="context"></span>
 #### 簡單的文本處理
 1. tr 命令可以用來刪除一段文本信息中的某些文字。或者將其進行轉換
 ```shell
@@ -401,6 +439,8 @@ paste -s file1 file2 file3
 5. 章節總結：
 斷行符 Windows 為 CR+LF(\r\n)，Linux/UNIX 為 LF(\n)。使用cat -A 文本 可以看到文本中包含的不可見特殊字符。Linux 的\n表現出來就是一個`$`，而 Windows/dos 的表現為`^M$`，可以直接使用dos2unix和unix2dos工具在兩種格式之間進行轉換，使用file命令可以查看文件的具體類型。
 
+[返回實驗目錄](#shiyanlou)
+<span id="stream"></span>
 #### 數據流重定向
 你可能對重定向這個概念感到些許陌生，但你應該在前面的課程中多次見過>或>>操作了，並知道他們分別是將標準輸出導向一個文件或追加到一個文件中。這其實就是重定向，將原本輸出到標準輸出的數據重定向到一個文件中，因為標準輸出(/dev/stdout)本身也是一個文件，我們將命令輸出導向另一個文件自然也是沒有任何問題的。
 
@@ -440,8 +480,9 @@ Linux 默認提供了三個特殊設備，用於終端的顯示和輸出，分�
 ls -a | sort | xargs echo
 #加上echo可以將原本的分行變成空格來顯示'ls -a'
 ```
-
-##### [挑戰]統計文本內容
+[返回實驗目錄](#shiyanlou)
+<span id="challenge3"></span>
+##### [挑戰3]統計文本內容
 有一個命令日誌檔`data1`在`wget https://labfile.oss.aliyuncs.com/courses/1/data1`
 
 將`data1`文本裡面找出出現頻率前3次的命令保存在`result`
@@ -449,7 +490,7 @@ ls -a | sort | xargs echo
 ```shell
 cat data1 |cut -c 8-|sort|uniq -dc|sort -rn -k1 |head -3 > /home/shiyanlou/result
 ```
-
+<span id="regex"></span>
 #### 正則表達式(Regular Expression)
 主要用在[grep](#ch5), [sed](#regex_sed), [awk](#regex_awk)。
 1. grep命令用於打印輸出文本中匹配的模式串，它使用正則表達式作為模式匹配的條件。
@@ -581,3 +622,17 @@ awk '
 > }}' test
 ```
 說明：這裡的 ==-F==參數，前面已經介紹過，它是用來預先指定待處理記錄的字段分隔符。我們需要注意的是除了指定 ==OFS==我們還可以在print 語句中直接打印特殊符號如這裡的 ==\t==，**print 打印的非變量內容都需要用""一對引號包圍起來。** 上面另一個版本，展示了實現預先指定變量分隔符的另一種方式，即使用 ==BEGIN==，就這個表達式指示了，其後的動作將在所有動作之前執行，這裡是 ==FS==賦值了新的"."點號代替默認的" "空格。
+
+[返回實驗目錄](#shiyanlou)
+<span id="challenge4"></span>
+##### [挑戰4] 數據提取
+資料`wget https://labfile.oss.aliyuncs.com/courses/1/data2`
+> 2016 TapFun 校招面試題
+###### 目標
+1. 在文件 /home/shiyanlou/data2 中匹配數字開頭的行，將所有以數字開頭的行都寫入 /home/shiyanlou/num 文件。
+2. 在文件 /home/shiyanlou/data2 中匹配出正確格式的郵箱，將所有的郵箱寫入 /home/shiyanlou/mail 文件，注意該文件中每行為一個郵箱。
+```shell
+grep '^[0-9]' /home/shiyanlou/data2 > /home/shiyanlou/num
+
+grep -E '^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$' /home/shiyanlou/data2 > /home/shiyanlou/mail
+```
