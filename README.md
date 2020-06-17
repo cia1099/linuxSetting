@@ -4,7 +4,7 @@
 
 * Contents
   * 安裝環境
-  * [3. 支援網頁播放視頻](#video)
+  * [支援網頁播放視頻](#video)
   * [安裝CMake](#cmake)
   * [Kdiff3安裝](#kdiff3)
   * [安裝GPU](#nvidia)
@@ -27,15 +27,56 @@ sudo dpkg -i [code file name].deb
 sudo apt-get install kolourpaint //記得別裝到kolourpaint4，是舊版
 ```
 [Ubuntu install Chewing](https://medium.com/@racktar7743/ubuntu-%E5%9C%A8-ubuntu-18-04-%E4%B8%AD%E6%96%B0%E5%A2%9E%E6%96%B0%E9%85%B7%E9%9F%B3%E8%BC%B8%E5%85%A5%E6%B3%95-4aa85782f656)
+
+**注意**:如果你在安裝一個軟件之後，無法立即使用`Tab`鍵補全這個命令，你可以嘗試先執行`source ~/.zshrc`(在我本地ubuntu只見到`~/.bashrc`)，然後你就可以使用補全操作。
+
+---
 * 檢查安裝包
 
-#### 1.  apt
+#### 1. [APT HowTo](https://www.debian.org/doc/manuals/apt-howto/index.zh-cn.html#contents)
 ```shell
-apt-cache search all | grep xx
+'''
+apt-cache 命令則是針對本地數據進行相關操作的工具，
+search 顧名思義在本地的數據庫中尋找有關softname相關軟件的信息
+'''
+apt-cache search all | grep [softname]
 apt-cache search all
-apt-cache search xx
+apt-cache search [softname]
+# 更新軟件源，保持本地的軟件包列表是最新的
+sudo apt-get update
+# 升級沒有依賴問題的軟件包
+sudo apt-get upgrade
+# 升級並解決依賴關係
+sudo apt-get dist-upgrade
 ```
+表apt-get工具
+|工具|說明|參數|說明|
+|---|---|---|---|
+install|其後加上軟件包名，用於安裝一個軟件包|-y|	自動回應是否安裝軟件包的選項，在一些自動化安裝腳本中使用這個參數將十分有用
+update|從軟件源鏡像服務器上下載/更新用於更新本地軟件源的軟件包列表|-s|模擬安裝
+upgrade|升級本地可更新的全部軟件包，但存在依賴問題時將不會升級，通常會在更新之前執行一次update|-q|靜默安裝方式，指定多個q或者-q=#,#表示數字，用於設定靜默級別，這在你不想要在安裝軟件包時屏幕輸出過多時很有用
+dist-upgrade|解決依賴關係並升級(存在一定危險性)|-f|修復損壞的依賴關係
+remove|移除已安裝的軟件包，包括與被移除軟件包有依賴關係的軟件包，但不包含軟件包的配置文件|-d|只下載不安裝
+autoremove|移除之前被其他軟件包依賴，但現在不再被使用的軟件包|--reinstall|重新安裝已經安裝但可能存在問題的軟件包
+purge|與 remove 相同，但會完全移除軟件包，包含其配置文件|--install-suggests|同時安裝 APT 給出的建議安裝的軟件包
+clean|移除下載到本地的已經安裝的軟件包，默認保存在/var/cache/apt/archives/
+autoclean|移除已安裝的軟件的舊版本軟件包
+
+移除軟件時順序是先`remove`或`remove --purge`(順帶移除配置文件) [軟件名]，然後才再用`autoremove`刪除依賴的軟件包。
+* 刪除安裝包
+```shell
+# 不保留配置文件的移除
+sudo apt-get purge [安裝包名]
+# 或者 sudo apt-get remove --purge
+# 移除不再需要的被依赖的软件包
+sudo apt-get autoremove
+##======不同時空下查的資料，上述是實驗樓的資料
+sudo apt-get --purge remove [安裝包名] #刪除單一包，包含配置文檔
+ sudo apt-get autoremove [安裝包名] #刪除安裝包與相依包
+```
+使用`apt-get -d install [軟件名]`；下載不安裝的所有相依軟件會下載到`/var/cache/apt/archives/`目錄底下。
 #### 2. dpkg
+我們經常可以在網絡上見到以deb形式打包的軟件包，就需要使用dpkg命令來安裝。然而，直接使用 dpkg 安裝可能會存在一些問題，因為dpkg並不能為你解決依賴關係；遇到缺少依賴包問題可以使用`apt-get install -f`修復。
 ```shell
 dpkg -l #完整
 dpkg -l 軟件名
@@ -43,14 +84,29 @@ whereis 軟件名
 dpkg -l | grep ftp
 dpkg --get-selections | grep 軟件名 #顯示軟件已安裝
 ```
-* 刪除安裝包
- ```
- sudo apt-get --purge remove [安裝包名] #刪除單一包
- sudo apt autoremove [安裝包名] #刪除安裝包與相依包
- ```
+|參數|說明|
+|---|---|
+-i|安裝指定 deb 包
+-R|後面加上目錄名，用於安裝該目錄下的所有 deb 安裝包
+-r|remove，移除某個已安裝的軟件包
+-I|顯示deb包文件的信息
+-s|顯示已安裝軟件的信息
+-S|搜索已安裝的軟件包
+-L|顯示已安裝軟件包的目錄信息
+
+**注意**：現在新版的Linux系統的`apt`可支援安裝.deb檔案了，請參考[VScode安裝辦法](https://code.visualstudio.com/docs/setup/linux)
+```shell
+sudo apt install ./<file>.deb
+
+# If you're on an older Linux distribution, you will need to run this instead:
+# sudo dpkg -i <file>.deb
+# sudo apt-get install -f # Install dependencies
+```
+#### 3. 從二進制包安裝
+二進制包的安裝比較簡單，我們需要做的只是將從網絡上下載的二進制包解壓後放到合適的目錄，然後將包含可執行的主程序文件的目錄添加進PATH環境變量即可，如果你不知道該放到什麼位置，請重新複習實驗樓第五節關於 Linux 環境變量。
 
 <span id="video"></span>
-#### 3. 支援網頁播放視頻
+#### 支援網頁播放視頻
 If those streaming services use DRM, you must enable DRM in Firefox's settings: Preferences -> General -> Play DRM-controlled content You might also have to install package libavcodec-extra to get the codecs:
 ```
 sudo apt install libavcodec-extra
@@ -221,10 +277,11 @@ export CUDA_BIN_PATH=/usr/local/cuda/bin;
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
 <a href="#shiyanlou">
-Contents
+Contents</a>
 
-* 文件查找
+* [文件查找](#tedious)
 * [簡單輸出與文件權限](#outstream_authority)
+* [環境變量](#env)
 * [文件打包與解壓縮](#compress)
 * [查看磁盤和目錄容量](#disk)
 * [有選擇的執行命令](#command)
@@ -263,6 +320,27 @@ sudo tail -f /var/log/syslog
 chmod 765 filename #將filename的權限修改成：擁有者(rwx)、所屬用戶(rw-)、其他用戶(r-x)
 chown [所有者] [filename] #將filename的所有者修改為[所有者]，可以用ll命令查看
 ```
+<span id="env"></span>
+#### 環境變量
+這裡介紹兩個重要文件 `/etc/bashrc`（有的 Linux 沒有這個文件） 和 `/etc/profile` ，它們分別存放的是 shell 變量和環境變量。還有要注意區別的是每個用戶目錄下的一個隱藏文件`~/.profile`，這個 .profile 只對當前用戶永久生效；因為它保存在當前用戶的 Home 目錄下。
+
+表：打印環境變量的訊息，變量範圍由外層至內層如下包覆：set > env > export
+|指令|說明|
+|---|---|
+set|顯示當前 Shell 所有變量，包括其內建環境變量（與 Shell 外觀等相關），用戶自定義變量及導出的環境變量。
+env|顯示與當前用戶相關的環境變量，還可以讓命令在指定環境中運行。
+export|顯示從 Shell 中導出成環境變量的變量，也能通過它將自定義變量導出為環境變量。
+* 添加自定義路徑到"PATH"環境變量
+PATH 里面的路径是以`:`作为分割符的，所以我们可以这样添加自定义路径:
+```shell
+PATH=$PATH:/home/shiyanlou/mybin
+#注意这里一定要使用绝对路径
+```
+在這裡給 PATH 環境變量追加了一個路徑，它也只是在當前 Shell 有效，一旦退出終端，再打開就會發現又失效了。在每個用戶的 home 目錄中有一個 Shell 每次啟動時會默認執行一個配置腳本，以初始化環境，包括添加一些用戶自定義環境變量等等。可以使用`cat /etc/shells`命令查看當前系統已安裝的 Shell。如果環境使用的 Shell 是 zsh，它的配置文件是`.zshrc`，相應的如果使用的 Shell 是 Bash，則配置文件為`.bashrc`。
+
+**先別亂改或添加`.bashrc`的內容，因為寫這篇文章時，我還看不懂本地端的該檔案內容。**
+
+
 [返回實驗目錄](#shiyanlou)
 <span id="compress"></span>
 #### 文件打包與解壓縮
