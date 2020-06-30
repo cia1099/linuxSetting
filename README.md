@@ -106,7 +106,7 @@ sudo apt install ./<file>.deb
 二進制包的安裝比較簡單，我們需要做的只是將從網絡上下載的二進制包解壓後放到合適的目錄，然後將包含可執行的主程序文件的目錄添加進PATH環境變量即可，如果你不知道該放到什麼位置，請重新複習實驗樓第五節關於 Linux 環境變量。
 
 <span id="video"></span>
-#### 支援網頁播放視頻
+### 支援網頁播放視頻
 If those streaming services use DRM, you must enable DRM in Firefox's settings: Preferences -> General -> Play DRM-controlled content You might also have to install package libavcodec-extra to get the codecs:
 ```
 sudo apt install libavcodec-extra
@@ -290,6 +290,7 @@ Contents</a>
 * ["挑戰3"統計文本內容](#challenge3)
 * [正則表達式](#regex)
 * ["挑戰4"數據提取](#challenge4)
+* [進程管理](#processManage)
 #### 文件查找
 有時候剛添加的文件，有可能會找不到，需要手動執行一次`updatedb`命令。
 * whereis簡單快速
@@ -714,3 +715,24 @@ grep '^[0-9]' /home/shiyanlou/data2 > /home/shiyanlou/num
 
 grep -E '^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$' /home/shiyanlou/data2 > /home/shiyanlou/mail
 ```
+<span id="processManage"></span>
+#### 進程管理
+```shell
+#查看物理CPU的个数
+cat /proc/cpuinfo |grep "physical id"|sort |uniq|wc -l
+
+#每个cpu的核心数
+cat /proc/cpuinfo |grep "physical id"|grep "0"|wc -l
+
+'''
+使用kill搭配PID關閉進程
+'''
+#首先我们使用图形界面打开了 gedit、gvim，用 ps 可以查看到
+ps aux | grep gedit
+#使用9这个信号强制结束 gedit 进程(1608)
+kill -9 1608
+#我们再查找这个进程的时候就找不到了
+ps aux | grep gedit
+
+```
+[返回實驗目錄](#shiyanlou)
