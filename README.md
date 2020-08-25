@@ -7,7 +7,9 @@
   * [支援網頁播放視頻](#video)
   * [安裝CMake](#cmake)
   * [Kdiff3安裝](#kdiff3)
+  * [pandoc安裝](#pandoc)
   * [安裝GPU](#nvidia)
+  * [安裝OpenCV](#opencv)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
@@ -201,6 +203,12 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
 -DBUILD_examples:BOOL=ON \
 -DQT5_QMAKE_EXECUTABLE:PATH=/opt/Qt5.11.3/5.11.3/gcc_64/bin/qmake \
 ..
+
+#----- 直接 apt-get 安裝
+sudo apt-get install -y libpcl-dev pcl-tools
+#===========
+#安裝octomap
+sudo apt-get install liboctomap-dev octovis
 ```
 
 * WSL文件位置
@@ -234,6 +242,21 @@ code /home/cia1099/.gitconfig
 	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
 ```
 [返回目錄](#contents)
+
+<span id="pandoc"></span>
+#### Pandoc安裝
+安裝pandoc不要用apt-get安裝，預編譯版本過舊，[直接在官網下載最新.deb](https://github.com/jgm/pandoc/releases/)
+```shell
+sudo dpkg -i $DEB_PATH
+#讓pandoc支援latex
+sudo apt-get -y install texlive-latex-recommended texlive-pictures texlive-latex-extra
+```
+pandoc 相關格式與參數設定可參考：
+1. [stack overflow](https://stackoverflow.com/questions/13515893/set-margin-size-when-converting-from-markdown-to-pdf-with-pandoc)
+2. [pandoc for pdf howTo](https://github.com/alexeygumirov/pandoc-for-pdf-how-to)
+
+[返回目錄](#contents)
+
 <span id="nvidia"></span>
 #### 安裝GPU
 [reference](https://gitpress.io/@chchang/install-nvidia-driver-cuda-pgstrom-in-ubuntu-1804)
@@ -274,6 +297,29 @@ export CUDA_BIN_PATH=/usr/local/cuda/bin;
 ./vcpkg install cuda
 ```
 [返回目錄](#contents)
+
+<span id="opencv"></span>
+### 安裝OpenCV
+[安裝參考](https://blog.gtwang.org/programming/ubuntu-linux-install-opencv-cpp-python-hello-world-tutorial/)
+```shell
+sudo apt-get install libopencv-dev libopencv-contrib-dev
+"""
+注意要安裝"libopencv-dev"，只裝"contrib"CMake找不到package
+"""
+# 安裝Eigen
+sudo apt-get install libeigen3-dev
+```
+安裝[GDB-imagewatch](https://github.com/csantosbh/gdb-imagewatch)
+
+注意套件的安裝路徑不要忘了，不然難以朔源，範例安裝位置：`/home/cia1099/Downloads/gdb-imagewatch/installFolder/<自動生成資料夾名>/`，在該資料夾下要看到`gdb-imagewatch.py`腳本
+
+#### 安裝Ceres
+先安裝依賴項：
+```shell
+sudo apt-get install liblapack-dev libsuitesparse-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev
+```
+再去github抓[Ceres](https://github.com/ceres-solver/ceres-solver)作cmake編譯安裝。
+
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
 <a href="#shiyanlou">
