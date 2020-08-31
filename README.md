@@ -250,10 +250,15 @@ code /home/cia1099/.gitconfig
 sudo dpkg -i $DEB_PATH
 #讓pandoc支援latex
 sudo apt-get -y install texlive-latex-recommended texlive-pictures texlive-latex-extra
+#eample md to pdf
+pandoc -V geometry:margin=0.5in -V linestrech:1.5 bk_ans.md --pdf-engine=xelatex -o 2_ans.pdf
+#當 --pdf-engine=xelatex失靈時
+pandoc -V geometry:margin=0.5in -V linestrech:1.5 3_ans.md -o 3_ans.pdf
 ```
 pandoc 相關格式與參數設定可參考：
 1. [stack overflow](https://stackoverflow.com/questions/13515893/set-margin-size-when-converting-from-markdown-to-pdf-with-pandoc)
 2. [pandoc for pdf howTo](https://github.com/alexeygumirov/pandoc-for-pdf-how-to)
+3. [LaTeX公式编辑器](https://latexlive.com/)
 
 [返回目錄](#contents)
 
