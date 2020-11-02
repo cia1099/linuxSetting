@@ -27,10 +27,14 @@ sudo dpkg -i [code file name].deb
 
 //------安裝小畫家
 sudo apt-get install kolourpaint //記得別裝到kolourpaint4，是舊版
+#------顯示已安裝的列表
+sudo dpkg --get-selections
 ```
 [Ubuntu install Chewing](https://medium.com/@racktar7743/ubuntu-%E5%9C%A8-ubuntu-18-04-%E4%B8%AD%E6%96%B0%E5%A2%9E%E6%96%B0%E9%85%B7%E9%9F%B3%E8%BC%B8%E5%85%A5%E6%B3%95-4aa85782f656)
 
 **注意**:如果你在安裝一個軟件之後，無法立即使用`Tab`鍵補全這個命令，你可以嘗試先執行`source ~/.zshrc`(在我本地ubuntu只見到`~/.bashrc`)，然後你就可以使用補全操作。
+
+[How to list all programs installed that were compiled from source?](https://askubuntu.com/questions/493308/how-to-list-all-programs-installed-that-were-compiled-from-source)
 
 ---
 * 檢查安裝包
@@ -241,6 +245,22 @@ code /home/cia1099/.gitconfig
 [mergetool "kdiff3"]
 	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
 ```
+##### 建立執行檔連結捷近
+1. 首先將所要連結的執行檔改變權限，使得該執行檔可執行
+2. 創建連結並將之移到`/usr/bin/`目錄裡
+3. 注意在`/usr/bin/`底下都依檔名來決定終端所操作的執行命令名稱
+```shell
+cd /home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/
+# 加"a"使得"ll"是否已經顯示 kdiff3* 表示已經可以直接 kdiff3執行，不用./kdiff3 執行
+sudo chmod a+x kdiff3
+#-------方法1
+ln -s kdiff3 link_to_kdiff3
+sudo mv link_to_kdiff3 /usr/bin
+sudo mv /usr/bin/link_to_kdiff3 /usr/bin/kdiff3 #rename
+#-------方法2
+sudo ln -s kdiff3 /usr/bin/kdiff3
+```
+
 [返回目錄](#contents)
 
 <span id="pandoc"></span>
