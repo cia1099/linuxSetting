@@ -321,6 +321,19 @@ export CUDA_PATH=/usr/local/cuda;
 export CUDA_BIN_PATH=/usr/local/cuda/bin;
 ./vcpkg install cuda
 ```
+
+#### 修改gcc和g++使得nvcc的版本兼容
+
+[參考連結](https://www.programmersought.com/article/70144048180/)
+
+因為cuda的版本會限制編譯器的版本，因此要編譯cuda需要對應版本的編譯器，所以要安裝該版本的編譯器，並將預設的編譯器修改成該對應的版本：
+```shell
+#以cuda10.2為例，該版本編譯器為gcc-8
+sudo apt-get install gcc-8 g++-8
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 10
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 10
+```
+
 [返回目錄](#contents)
 
 <span id="opencv"></span>
