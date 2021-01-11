@@ -34,7 +34,31 @@ sudo dpkg --get-selections
 
 **注意**:如果你在安裝一個軟件之後，無法立即使用`Tab`鍵補全這個命令，你可以嘗試先執行`source ~/.zshrc`(在我本地ubuntu只見到`~/.bashrc`)，然後你就可以使用補全操作。
 
-[How to list all programs installed that were compiled from source?](https://askubuntu.com/questions/493308/how-to-list-all-programs-installed-that-were-compiled-from-source)
+* [How to list all programs installed that were compiled from source?](https://askubuntu.com/questions/493308/how-to-list-all-programs-installed-that-were-compiled-from-source)
+
+##### [How to Change Lid Close Behavior in Ubuntu 20.04](https://ubuntuhandbook.org/index.php/2020/05/lid-close-behavior-ubuntu-20-04/)
+修改筆電闔上屏幕的動作，使用指令
+```shell
+sudo gedit /etc/systemd/logind.conf
+```
+修改`.conf`的`HandLidSwitch`內容對應的動作如下：
+
+* HandleLidSwitch=lock – lock when lid closed.
+* HandleLidSwitch=ignore – do nothing.
+* HandleLidSwitch=poweroff – shutdown.
+* HandleLidSwitch=hibernate – hibernate Ubuntu.
+
+<div aligned=center>
+
+<img src="img/lidclose-action.png"></img>
+注意要將該行註釋取消掉
+</div>
+
+修改`.conf`完成後，要應用該變化需要輸入
+```shell
+systemctl restart systemd-logind.service
+```
+
 
 ---
 * 檢查安裝包
@@ -324,15 +348,20 @@ export CUDA_BIN_PATH=/usr/local/cuda/bin;
 
 #### 修改gcc和g++使得nvcc的版本兼容
 
-[參考連結](https://www.programmersought.com/article/70144048180/)
+[參考連結(bad)](https://www.programmersought.com/article/70144048180/)
+
+[參考連結(good)](https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-20-04-lts-focal-fossa)
 
 因為cuda的版本會限制編譯器的版本，因此要編譯cuda需要對應版本的編譯器，所以要安裝該版本的編譯器，並將預設的編譯器修改成該對應的版本：
 ```shell
 #以cuda10.2為例，該版本編譯器為gcc-8
 sudo apt-get install gcc-8 g++-8
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 10
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 10
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8 #其中8表示priority
 ```
+使用`sudo update-alternatives --config gcc`切換預設編譯器版本
+
+使用`sudo update-alternatives --remove /usr/bin/gcc-8 gcc`刪除版本選項，如果priority設錯的話可以這樣修改
 
 [返回目錄](#contents)
 
