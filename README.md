@@ -9,6 +9,7 @@
   * [Kdiff3安裝](#kdiff3)
   * [pandoc安裝](#pandoc)
   * [安裝GPU](#nvidia)
+    * [Conda環境安裝cuda和cudnn](#conda)
   * [安裝OpenCV](#opencv)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
@@ -51,6 +52,7 @@ sudo gedit /etc/systemd/logind.conf
 <div aligned=center>
 
 <img src="img/lidclose-action.png"></img>
+
 注意要將該行註釋取消掉
 </div>
 
@@ -365,6 +367,22 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8 #其中8表
 
 [返回目錄](#contents)
 
+<span id="conda"></span>
+* ### Conda環境安裝cuda和cudnn
+
+conda環境要安裝cuda可以直接用conda預編譯好的安裝包，安裝即可
+```shell
+conda search cudatoolkit #查看conda提供的安裝版本
+conda install cudatoolkit=11 #安裝cuda11
+```
+安裝`cudnn`直接拿官網下載的壓縮包，解壓後再複製至你要安裝的conda之env
+```shell
+sudo cp cuda/include/cudnn*.h   /miniconda3/envs/<your environment here>/include
+sudo cp cuda/lib64/libcudnn*    /miniconda3/envs/<your environment here>/lib
+```
+
+[返回目錄](#contents)
+
 <span id="opencv"></span>
 ### 安裝OpenCV
 [安裝參考](https://blog.gtwang.org/programming/ubuntu-linux-install-opencv-cpp-python-hello-world-tutorial/)
@@ -386,6 +404,7 @@ sudo apt-get install libeigen3-dev
 sudo apt-get install liblapack-dev libsuitesparse-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev
 ```
 再去github抓[Ceres](https://github.com/ceres-solver/ceres-solver)作cmake編譯安裝。
+
 
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
