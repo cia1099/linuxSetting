@@ -11,6 +11,7 @@
   * [安裝GPU](#nvidia)
     * [Conda環境安裝cuda和cudnn](#conda)
   * [安裝OpenCV](#opencv)
+  * [偵測USB相機編號](#webcam)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
@@ -404,6 +405,23 @@ sudo apt-get install libeigen3-dev
 sudo apt-get install liblapack-dev libsuitesparse-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev
 ```
 再去github抓[Ceres](https://github.com/ceres-solver/ceres-solver)作cmake編譯安裝。
+
+<span id="webcam"></span>
+#### 偵測USB相機編號
+每一個usb都會對應一個編號的device，預設的相機即`device0`為屏幕上的相機，而要查詢以USB新增的相機輸入以下指令：
+```shell
+lsusb
+'''
+lsusb會輸出各項device的編號、廠商等，找到ID項目
+然後輸入下面指令，假設看到某項ID編號為(0408:5300)
+'''
+lsusb -v -d 0408:5300 |grep -i serial
+```
+然後就可以看到該ID設備的`iSerial`編號了。
+[參考資料](https://superuser.com/questions/902012/how-to-identify-usb-webcam-by-serial-number-from-the-linux-command-line)
+
+
+[返回目錄](#contents)
 
 
 <span id="shiyanlou"></span>
