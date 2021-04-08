@@ -12,6 +12,7 @@
     * [Conda環境安裝cuda和cudnn](#conda)
   * [安裝OpenCV](#opencv)
   * [偵測USB相機編號](#webcam)
+  * [源碼安裝](#makeinstall)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
@@ -422,6 +423,35 @@ lsusb -v -d 0408:5300 |grep -i serial
 
 
 [返回目錄](#contents)
+
+<span id="makeinstall"></span>
+#### 源碼安裝
+參考資料：
+1. https://stackoverflow.com/questions/1439950/whats-the-opposite-of-make-install-i-e-how-do-you-uninstall-a-library-in-li
+
+2. https://gist.github.com/ruario/a36052a1ae1de4edbc6ad39fe39e5385
+
+注意在編譯源碼後要進行`sudo make install`前先確認有沒有`make uninstall`專案指令，如果沒有最好採用`checkinstall`指令來建立`.deb`軟件包來安裝。如果不小心已經`make install`了，就利用`install_manifest.txt`方法來手動刪除安裝文件。
+
+* ##### Method: checkinstall -- only for debian based systems
+```shell
+sudo apt-get -y install checkinstall
+cd $SOURCE_DIR 
+sudo checkinstall
+sudo dpkg -i $PACKAGE_NAME_YOU_ENTERED 
+sudo dpkg -r $PACKAGE_NAME_YOU_ENTERED
+```
+* ##### Method: install_manifest.txt
+```shell
+# 檢查安裝的文件是否存在
+cd $SOURCE_DIR 
+sudo xargs -I{} stat -c "%z %n" "{}" < install_manifest.txt
+
+# 將安裝的文件移動到 deleted-by-uninstall 文件夾
+mkdir deleted-by-uninstall
+sudo xargs -I{} mv -t deleted-by-uninstall "{}" < install_manifest.txt
+```
+執行完移動安裝文件後，就可以`make clean`然後在刪除安裝文件所在的資料夾後，在刪除整個源碼資料夾即可。
 
 
 <span id="shiyanlou"></span>
