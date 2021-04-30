@@ -12,7 +12,8 @@
     * [Conda環境安裝cuda和cudnn](#conda)
   * [安裝OpenCV](#opencv)
   * [偵測USB相機編號](#webcam)
-  * [源碼安裝](#makeinstall)
+  * [源碼解安裝](#makeuninstall)
+  * [git 操作](#git)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
@@ -424,8 +425,8 @@ lsusb -v -d 0408:5300 |grep -i serial
 
 [返回目錄](#contents)
 
-<span id="makeinstall"></span>
-#### 源碼安裝
+<span id="makeuninstall"></span>
+#### 源碼解安裝
 參考資料：
 1. https://stackoverflow.com/questions/1439950/whats-the-opposite-of-make-install-i-e-how-do-you-uninstall-a-library-in-li
 
@@ -451,8 +452,33 @@ sudo xargs -I{} stat -c "%z %n" "{}" < install_manifest.txt
 mkdir deleted-by-uninstall
 sudo xargs -I{} mv -t deleted-by-uninstall "{}" < install_manifest.txt
 ```
-執行完移動安裝文件後，就可以`make clean`然後在刪除安裝文件所在的資料夾後，在刪除整個源碼資料夾即可。
+執行完移動安裝文件後，就可以`make clean`然後再刪除安裝文件所在的資料夾後，再刪除整個源碼資料夾即可。
 
+
+<span id="git"></span>
+#### Git 操作
+<a href="#git">
+Contents</a>
+
+* [clone 子文件夾](#clone_sub)
+
+<span id="clone_sub"></span>
+##### clone 子資料夾
+[參考stack overflow](https://stackoverflow.com/questions/600079/how-do-i-clone-a-subdirectory-only-of-a-git-repository/52269934#52269934)
+
+E.g., to clone only objects required for 'chapter-10' of this minimal test repository: https://github.com/dev-cafe/cmake-cookbook.git I can do:
+```shell
+git clone \
+  --depth 1  \
+  --filter=blob:none  \
+  --sparse \
+  https://github.com/dev-cafe/cmake-cookbook.git \
+;
+cd cmake-cookbook
+git sparse-checkout set chapter-10
+```
+
+[返回目錄](#contents)
 
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
