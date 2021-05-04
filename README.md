@@ -480,6 +480,12 @@ git sparse-checkout set chapter-10
 
 [返回目錄](#contents)
 
+#### GCC 優化參數
+參考資料：
+* https://linux.die.net/man/1/arm-linux-gnu-gcc
+* https://wiki.debian.org/ArchitectureSpecificsMemo#C.2FC.2B-.2B-_Preprocessor_Symbols
+* https://wiki.gentoo.org/wiki/GCC_optimization#-msse.2C_-msse2.2C_-msse3.2C_-mmmx.2C_-m3dnow
+
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
 <a href="#shiyanlou">
