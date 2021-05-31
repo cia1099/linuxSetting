@@ -14,6 +14,7 @@
   * [偵測USB相機編號](#webcam)
   * [源碼解安裝](#makeuninstall)
   * [git 操作](#git)
+  * [docker 操作](#docker)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
@@ -485,6 +486,46 @@ git sparse-checkout set chapter-10
 * https://linux.die.net/man/1/arm-linux-gnu-gcc
 * https://wiki.debian.org/ArchitectureSpecificsMemo#C.2FC.2B-.2B-_Preprocessor_Symbols
 * https://wiki.gentoo.org/wiki/GCC_optimization#-msse.2C_-msse2.2C_-msse3.2C_-mmmx.2C_-m3dnow
+
+<span id="docker"></span>
+#### Docker 操作
+
+##### Container
+* 查看所有container
+`sudo docker container ls -a`
+
+* 查看線上執行的容器
+`sudo docker ps`
+
+* 刪除容器
+`sudo docker rm <NAME>`
+
+* 啟動容器
+`sudo docker start <NAME>`
+
+* 關閉容器
+`sudo docker stop <NAME>`
+
+* 以root身份進入容器
+`sudo docker exec -ti <NAME> bash`
+
+* 建立一種容器，讓該容器可以運行GUI程式權限
+```shell
+sudo docker run --name=<NAME> -ti \
+-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix <IMAGE:TAG>
+```
+[參考資料 1](http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/)
+[參考資料 2](https://marcosnietoblog.wordpress.com/2017/04/30/docker-image-with-opencv-with-x11-forwarding-for-gui/)
+
+
+##### Images
+
+* 查看所有images:
+`sudo docker images -a`
+* 刪除某個image
+`sudo docker image rm <image-REPOSITORY:with-TAG>`
+
+
 
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
