@@ -517,6 +517,15 @@ sudo docker run --name=<NAME> -ti \
 [參考資料 1](http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/)
 [參考資料 2](https://marcosnietoblog.wordpress.com/2017/04/30/docker-image-with-opencv-with-x11-forwarding-for-gui/)
 
+* 複製檔案到容器
+`sudo docker cp <local-filePATH> <NAME>:<dest-path>`
+
+* 複製容器檔案到主機
+`sudo docker cp <NAME>:<dest-filePATH> <local-dest-path>`
+
+[參考資料](https://support.sitecore.com/kb?id=kb_article_view&sysparm_article=KB0383441)
+
+---
 
 ##### Images
 
