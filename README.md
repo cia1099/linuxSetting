@@ -455,6 +455,33 @@ sudo xargs -I{} mv -t deleted-by-uninstall "{}" < install_manifest.txt
 ```
 執行完移動安裝文件後，就可以`make clean`然後再刪除安裝文件所在的資料夾後，再刪除整個源碼資料夾即可。
 
+##### CMakeLists 添加解安裝target
+參考資料：
+1. https://stackoverflow.com/questions/41471620/cmake-support-make-uninstall
+2. https://gitlab.kitware.com/cmake/community/-/wikis/FAQ#can-i-do-make-uninstall-with-cmake
+
+在 top-level 的`CMakeLists.txt`裡添包含[cmake_uninstall.cmake.in](cmake/cmake_uninstall.cmake.in)的CMake模組，例如：
+```cmake
+# uninstall target
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+endif()
+
+# -----
+# 或是直接將cmake_uninstall.camke.in放到CMAKE_MODULE_PATH
+# 指定的資料夾裡面，也會生成uninstall target
+# -----
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+# cmake_uninstall.cmake.in 存在於${PROJECT_SOURCE_DIR}/cmake/ 路徑下
+```
+這樣就使得make有uninstall的build選項。
+
 
 <span id="git"></span>
 #### Git 操作
