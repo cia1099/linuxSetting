@@ -10,6 +10,7 @@
   * [pandoc安裝](#pandoc)
   * [安裝GPU](#nvidia)
     * [Conda環境安裝cuda和cudnn](#conda)
+    * [解除安裝cuda](#uninstall_cuda)
   * [安裝OpenCV](#opencv)
   * [偵測USB相機編號](#webcam)
   * [源碼解安裝](#makeuninstall)
@@ -386,6 +387,22 @@ sudo cp cuda/lib64/libcudnn*    /miniconda3/envs/<your environment here>/lib
 ```
 
 [返回目錄](#contents)
+
+<span id="uninstall_cuda"></span>
+* ### 解除安裝cuda
+通常`cuda`是用dpkg安裝的，所以要一直用`dpkg -l|grep cuda`檢查安裝與解安裝與否，[可以參考](https://askubuntu.com/questions/959835/how-to-remove-cuda-9-0-and-install-cuda-8-0-instead)。
+要解安裝cuda要重複輸入指令：
+```shell
+# 刪除含有cuda的搜尋結果在dpkg -l
+dpkg -l|grep cuda|awk '{print $2}' | xargs -n1 sudo dpkg -r
+
+# --- 重複上述步驟，因為會有相依性，刪除會失敗
+# 所以用 dpkg -l|grep cuda 檢查開頭是否為 'ii'還是'rc'
+# ii 表示已安裝， rc 表示以刪除還留下config檔
+# 等列表全部顯示為 rc 後在輸入：
+dpkg -l|grep cuda|awk '{print $2}' | xargs -n1 sudo dpkg --purge
+
+```
 
 <span id="opencv"></span>
 ### 安裝OpenCV
