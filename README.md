@@ -532,7 +532,9 @@ git sparse-checkout set chapter-10
 ```
 
 ##### 縮小git的pack容量
-當.git的內容太過雍腫的時候，可以使用以下指令查出前10個最大的檔案有哪些：https://github.com/18F/C2/issues/439
+* https://aleen42.gitbooks.io/wiki/content/git/shrink_sizes/shrink_sizes.html
+* https://github.com/18F/C2/issues/439
+當.git的內容太過雍腫的時候，可以使用以下指令查出前10個最大的檔案有哪些：
 ```shell
 git verify-pack -v .git/objects/pack/pack-7b03cc896f31b2441f3a791ef760bd28495697e6.idx \
 | sort -k 3 -n \
