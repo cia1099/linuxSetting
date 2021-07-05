@@ -341,7 +341,7 @@ cd /usr/local/cuda-10.2/samples/1_Utilities/deviceQuery
 sudo make
 ```
 會產生一個叫 deviceQuery 的執行檔，執行後，會有相關資訊
-* 安裝cuDNN
+* ###### 安裝cuDNN
 The recommended way for installing cuDNN is to first copy the `tgz` file to `/usr/local` and then extract it, and then remove the `tgz` file if necessary. This method will preserve symbolic links. At last, execute `sudo ldconfig` to update the shared library cache.
 
 * 讓vcpkg支援CUDA
@@ -351,6 +351,14 @@ cd vcpkg
 export CUDA_PATH=/usr/local/cuda;
 export CUDA_BIN_PATH=/usr/local/cuda/bin;
 ./vcpkg install cuda
+```
+
+* ##### 鎖定`nvidia driver`和`cuda driver`版本
+[How do I hold all updates related to nvidia driver](https://askubuntu.com/questions/631453/how-do-i-hold-all-updates-related-to-nvidia-346-72-driver)
+```
+sudo apt-mark hold nvidia-driver-460 cuda-driver-dev-11-2 
+# 解除鎖定
+sudo apt-mark unhold nvidia-driver-460 cuda-driver-dev-11-2
 ```
 
 #### 修改gcc和g++使得nvcc的版本兼容
@@ -521,6 +529,25 @@ git clone \
 ;
 cd cmake-cookbook
 git sparse-checkout set chapter-10
+```
+
+##### 縮小git的pack容量
+當.git的內容太過雍腫的時候，可以使用以下指令查出前10個最大的檔案有哪些：https://github.com/18F/C2/issues/439
+```shell
+git verify-pack -v .git/objects/pack/pack-7b03cc896f31b2441f3a791ef760bd28495697e6.idx \
+| sort -k 3 -n \
+| tail -10
+
+git rev-list --objects --all | grep [first few chars of the sha1 from previous output]
+```
+然後使用過濾刪除某個附檔名內在.git的紀錄，以縮小.git容量
+```shell
+git filter-branch --index-filter 'git rm --cached --ignore-unmatch *.mov' -- --all
+rm -Rf .git/refs/original
+rm -Rf .git/logs/
+git gc --aggressive --prune=now
+# Verify
+git count-objects -v
 ```
 
 [返回目錄](#contents)
