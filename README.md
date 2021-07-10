@@ -9,6 +9,8 @@
   * [Kdiff3安裝](#kdiff3)
   * [pandoc安裝](#pandoc)
   * [安裝GPU](#nvidia)
+    * [NIVIDA driver breaks build-in audio](#audio_break)
+    * [修改gcc和g++使得nvcc的版本兼容](#gcc)
     * [Conda環境安裝cuda和cudnn](#conda)
     * [解除安裝cuda](#uninstall_cuda)
   * [安裝OpenCV](#opencv)
@@ -330,7 +332,7 @@ nvidia-smi #查看GPU資訊
 nvidia-modprobe #將驅動手動啟動載入至系統
 ```
 <font color=ff00>如果找不到驅動，要將BIOS的Secure Boot設為Disable</font>
-* 安裝CUDA
+* ##### 安裝CUDA
 同樣採用官網下載deb 回來安裝的方法
 到這邊 https://developer.nvidia.com/cuda-downloads 
 選擇 Linux -- x86_64 -- Ubuntu -- 18.04 -- deb(local)
@@ -341,7 +343,7 @@ cd /usr/local/cuda-10.2/samples/1_Utilities/deviceQuery
 sudo make
 ```
 會產生一個叫 deviceQuery 的執行檔，執行後，會有相關資訊
-* ###### 安裝cuDNN
+* ##### 安裝cuDNN
 The recommended way for installing cuDNN is to first copy the `tgz` file to `/usr/local` and then extract it, and then remove the `tgz` file if necessary. This method will preserve symbolic links. At last, execute `sudo ldconfig` to update the shared library cache.
 
 * 讓vcpkg支援CUDA
@@ -360,12 +362,31 @@ sudo apt-mark hold nvidia-driver-460 cuda-driver-dev-11-2
 # 解除鎖定
 sudo apt-mark unhold nvidia-driver-460 cuda-driver-dev-11-2
 ```
+[返回目錄](#contents)
 
+--- 
+<span id="audio_break"></span>
+* #### NIVIDA driver breaks build-in audio
+* https://pov.es/linux/ubuntu-ubuntu-20-4-installing-nvidia-drivers-breaks-built-in-audio-on-laptop/
+* [比較沒用的參考](https://www.linuxuprising.com/2018/06/fix-no-sound-dummy-output-issue-in.html)
+
+當安裝好顯卡驅動後，發現沒有聲音，先查詢音效卡的狀態，然後找出該音效卡所用的[codec](https://www.infradead.org/~mchehab/rst_conversion/sound/hd-audio/models.html)，在編輯所對應的`/etc/modprobe.d/alsa-base.conf`alsa檔案。
+```shell
+# 查詢多媒體卡的狀態
+lshw -c multimedia
+# 查看audio的driver是否為snd_hda_intel
+lspci -nnk | grep -A2 Audio
+# 查看音效卡所使用的codec，要注意`/proc/asound/`目錄下`card`的編號，找到編號廠商為Realtek
+cat /proc/asound/card1/codec*
+# 在網站(codec)雖然找到ALC1220對應的是dual-codecs，但不知道為啥不能啟用，然而用下一個`clevo-p950`卻成功了，很神奇卻也很鳥。編輯alas檔：
+echo "options snd-hda-intel model=clevo-p950" | sudo tee -a /etc/modprobe.d/alsa-base.conf
+echo "options snd-hda-intel probe_mask=0x1" | sudo tee -a /etc/modprobe.d/alsa-base.conf
+# index 要輸入號碼是card的幾號
+echo "options snd-hda-intel index=1" | sudo tee -a /etc/modprobe.d/alsa-base.conf
+```
+<span id="gcc"></span>
 #### 修改gcc和g++使得nvcc的版本兼容
-
-[參考連結(bad)](https://www.programmersought.com/article/70144048180/)
-
-[參考連結(good)](https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-20-04-lts-focal-fossa)
+[參考連結](https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-20-04-lts-focal-fossa)
 
 因為cuda的版本會限制編譯器的版本，因此要編譯cuda需要對應版本的編譯器，所以要安裝該版本的編譯器，並將預設的編譯器修改成該對應的版本：
 ```shell
@@ -534,6 +555,7 @@ git sparse-checkout set chapter-10
 ##### 縮小git的pack容量
 * https://aleen42.gitbooks.io/wiki/content/git/shrink_sizes/shrink_sizes.html
 * https://github.com/18F/C2/issues/439
+
 當.git的內容太過雍腫的時候，可以使用以下指令查出前10個最大的檔案有哪些：
 ```shell
 git verify-pack -v .git/objects/pack/pack-7b03cc896f31b2441f3a791ef760bd28495697e6.idx \
