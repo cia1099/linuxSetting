@@ -585,6 +585,13 @@ git count-objects -v
 <span id="docker"></span>
 #### Docker 操作
 
+##### 将当前用户加入Docker Group
+为了能在非`sudo`模式下使用`Docker`, 需要将当前用户加入`Docker Group`.
+* 执行命令:
+`sudo usermod -aG docker $USER`
+
+* **为了使上述变更生效，请Restart**
+
 ##### Container
 * 查看所有container
 `sudo docker container ls -a`
@@ -611,6 +618,54 @@ sudo docker run --name=<NAME> -ti \
 ```
 [參考資料 1](http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/)
 [參考資料 2](https://marcosnietoblog.wordpress.com/2017/04/30/docker-image-with-opencv-with-x11-forwarding-for-gui/)
+
+* 用`docker-compose`寫法：
+```yml
+version: "3"
+
+services:
+  app:
+    image: <IMAGE:TAG>
+    build: #./path/to/xxx.Dockerfile
+    
+    container_name: <NAME>
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    network_mode: host
+'''
+  用瀏覽器顯示寫法
+'''
+version: '3.4'
+services:
+  # cpu development:
+  workspace-bionic-cpu-vnc:
+    build:
+      context: docker
+      dockerfile: cpu.Dockerfile
+      network: host
+    image: registry.cn-shanghai.aliyuncs.com/shenlanxueyuan/sensor-fusion-workspace:bionic-cpu-vnc
+    container_name: fusion
+    privileged: true
+    environment:
+        # set VNC login password here:
+        - VNC_PASSWORD=55123
+    volumes:
+      # mount your workspace here:
+      - ./workspace:/workspace
+    ports:
+      # HTML5 VNC:
+      - 40080:80
+      # standard VNC client:
+      - 45901:5901
+      # supervisord admin:
+      - 49001:9001
+      # ROS master:
+      - 11311:11311
+
+```
+[參考資料](https://www.cloudsavvyit.com/10520/how-to-run-gui-applications-in-a-docker-container/)
 
 * 複製檔案到容器
 `sudo docker cp <local-filePATH> <NAME>:<dest-path>`
