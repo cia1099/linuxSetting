@@ -282,6 +282,7 @@ code /home/cia1099/.gitconfig
 1. 首先將所要連結的執行檔改變權限，使得該執行檔可執行
 2. 創建連結並將之移到`/usr/bin/`目錄裡
 3. 注意在`/usr/bin/`底下都依檔名來決定終端所操作的執行命令名稱
+4. [注意`ln`的使用方法](https://askubuntu.com/questions/56339/how-to-create-a-soft-or-symbolic-link): `sudo ln -s /<full>/<path>/<to>/<file> /usr/local/bin`
 ```shell
 cd /home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/
 # 加"a"使得"ll"是否已經顯示 kdiff3* 表示已經可以直接 kdiff3執行，不用./kdiff3 執行
@@ -291,7 +292,7 @@ ln -s kdiff3 link_to_kdiff3
 sudo mv link_to_kdiff3 /usr/bin
 sudo mv /usr/bin/link_to_kdiff3 /usr/bin/kdiff3 #rename
 #-------方法2
-sudo ln -s kdiff3 /usr/bin/kdiff3
+sudo ln -s /home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3 /usr/local/bin
 ```
 
 [返回目錄](#contents)
