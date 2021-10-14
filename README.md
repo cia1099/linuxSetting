@@ -12,6 +12,7 @@
     * [NIVIDA driver breaks build-in audio](#audio_break)
     * [修改gcc和g++使得nvcc的版本兼容](#gcc)
     * [Conda環境安裝cuda和cudnn](#conda)
+      * 查看Conda ENV python 版本
     * [解除安裝cuda](#uninstall_cuda)
   * [安裝OpenCV](#opencv)
   * [偵測USB相機編號](#webcam)
@@ -416,6 +417,12 @@ sudo cp cuda/include/cudnn*.h   /miniconda3/envs/<your environment here>/include
 sudo cp cuda/lib64/libcudnn*    /miniconda3/envs/<your environment here>/lib
 ```
 
+* #### 查看Conda ENV python 版本
+[參考資料](https://stackoverflow.com/questions/43168264/which-python-version-is-installed-in-another-conda-env)
+```shell
+conda env list | grep -v "^$\|#" |awk '{print $1;}'|xargs -I{} -d "\n" sh -c 'printf "Env: {}\t"; conda list -n {} |grep "^python\s";'
+```
+
 [返回目錄](#contents)
 
 <span id="uninstall_cuda"></span>
@@ -550,7 +557,7 @@ git clone \
   https://github.com/dev-cafe/cmake-cookbook.git \
 ;
 cd cmake-cookbook
-git sparse-checkout set chapter-10
+git sparse-checkout add chapter-10
 ```
 
 ##### 縮小git的pack容量

@@ -3,13 +3,20 @@ import numpy as np
 import cv2
 import sys, os, glob, shutil,time
 import json
-sys.path.insert(0,'/home/keroro/Program_Files/Open3D/examples/python/reconstruction_system/sensors')
-from realsense_recorder import Preset
 import argparse
 from pathlib import Path
+from enum import IntEnum
 
 
 FRAME_MAX = 99999
+
+class Preset(IntEnum):
+    Custom = 0
+    Default = 1
+    Hand = 2
+    HighAccuracy = 3
+    HighDensity = 4
+    MediumDensity = 5
 
 def get_predictor(cfg, model_name: str, threshold:float=0.7):
     cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, model_name)
