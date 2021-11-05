@@ -11,6 +11,7 @@
   * [安裝GPU](#nvidia)
     * [NIVIDA driver breaks build-in audio](#audio_break)
     * [修改gcc和g++使得nvcc的版本兼容](#gcc)
+    * 更換cuda版本
     * [Conda環境安裝cuda和cudnn](#conda)
       * 查看Conda ENV python 版本
     * [解除安裝cuda](#uninstall_cuda)
@@ -42,6 +43,24 @@ sudo dpkg --get-selections
 [Ubuntu install Chewing](https://medium.com/@racktar7743/ubuntu-%E5%9C%A8-ubuntu-18-04-%E4%B8%AD%E6%96%B0%E5%A2%9E%E6%96%B0%E9%85%B7%E9%9F%B3%E8%BC%B8%E5%85%A5%E6%B3%95-4aa85782f656)
 
 **注意**:如果你在安裝一個軟件之後，無法立即使用`Tab`鍵補全這個命令，你可以嘗試先執行`source ~/.zshrc`(在我本地ubuntu只見到`~/.bashrc`)，然後你就可以使用補全操作。
+
+* ####  `.bashrc`範例：
+```shell
+export CUDA_HOME=/usr/local/cuda
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+export PATH=$PATH:$CUDA_HOME/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# <<< Qt6
+export PATH=$PATH:/home/keroro/Program_Files/Qt6/build/qtbase/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/keroro/Program_Files/Qt6/build/qtbase/lib
+export QT_QPA_PLATFORM_PLUGIN_PATH=/home/keroro/Program_Files/Qt6/build/qtbase/plugins/platforms
+```
 
 * [How to list all programs installed that were compiled from source?](https://askubuntu.com/questions/493308/how-to-list-all-programs-installed-that-were-compiled-from-source)
 
@@ -401,6 +420,17 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8 #其中8表
 
 使用`sudo update-alternatives --remove /usr/bin/gcc-8 gcc`刪除版本選項，如果priority設錯的話可以這樣修改
 
+#### 更換cuda版本
+[查看cuda支持gcc版本](https://stackoverflow.com/questions/6622454/cuda-incompatible-with-my-gcc-version)
+```shell
+# 檢查cuda所連結的版本
+ll /usr/local |grep cuda
+# 刪除原本連結的cuda位置
+sudo rm /etc/alternatives/cuda
+# 建立xx版本的連結到原來位置
+sudo ln -s /usr/local/cuda-xx /etc/alternatives/cuda
+```
+
 [返回目錄](#contents)
 
 <span id="conda"></span>
@@ -624,9 +654,10 @@ git count-objects -v
 sudo docker run --name=<NAME> -ti \
 -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix <IMAGE:TAG>
 ```
-[參考資料 1](http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/)
-[參考資料 2](https://marcosnietoblog.wordpress.com/2017/04/30/docker-image-with-opencv-with-x11-forwarding-for-gui/)
+[顯示方法參考資料 1](http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/)
+[顯示方法參考資料 2](https://marcosnietoblog.wordpress.com/2017/04/30/docker-image-with-opencv-with-x11-forwarding-for-gui/)
 
+* 参考[Docker Compose官方文档](https://docs.docker.com/compose/install/)完成`docker-compose`环境的安装
 * 用`docker-compose`寫法：
 ```yml
 version: "3"
@@ -673,7 +704,14 @@ services:
       - 11311:11311
 
 ```
-[參考資料](https://www.cloudsavvyit.com/10520/how-to-run-gui-applications-in-a-docker-container/)
+之後要建立容器只要在`docker-compose.yml`的目錄下指令：
+```shell
+docker-compose down && docker-compose up
+# 如果本來container就沒有這個<NAME>直接up就行，不用down
+docker-compose up
+```
+
+[docker 複製檔案參考資料](https://www.cloudsavvyit.com/10520/how-to-run-gui-applications-in-a-docker-container/)
 
 * 複製檔案到容器
 `sudo docker cp <local-filePATH> <NAME>:<dest-path>`
