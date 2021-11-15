@@ -60,6 +60,12 @@ export NVM_DIR="$HOME/.nvm"
 export PATH=$PATH:/home/keroro/Program_Files/Qt6/build/qtbase/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/keroro/Program_Files/Qt6/build/qtbase/lib
 export QT_QPA_PLATFORM_PLUGIN_PATH=/home/keroro/Program_Files/Qt6/build/qtbase/plugins/platforms
+
+# <<< sdkmanager
+#ref. https://linoxide.com/install-android-sdk-manager-ubuntu/
+# https://stackoverflow.com/questions/49507160/how-to-install-jdk-10-under-ubuntu
+# https://jdk.java.net/archive/
+export PATH=$PATH:/home/keroro/Program_Files/Android/Sdk/tools/bin:/home/keroro/Program_Files/Android/Sdk/tools
 ```
 
 * [How to list all programs installed that were compiled from source?](https://askubuntu.com/questions/493308/how-to-list-all-programs-installed-that-were-compiled-from-source)
@@ -655,6 +661,7 @@ sudo docker run --name=<NAME> -ti \
 -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix <IMAGE:TAG>
 ```
 [顯示方法參考資料 1](http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/)
+
 [顯示方法參考資料 2](https://marcosnietoblog.wordpress.com/2017/04/30/docker-image-with-opencv-with-x11-forwarding-for-gui/)
 
 * 参考[Docker Compose官方文档](https://docs.docker.com/compose/install/)完成`docker-compose`环境的安装
@@ -723,14 +730,16 @@ docker-compose up
 
 ---
 
-##### Images
+#### Images
 
 * 查看所有images:
 `sudo docker images -a`
 * 刪除某個image
 `sudo docker image rm <image-REPOSITORY:with-TAG>`
 
+* [DockerFile寫法](https://www.jmoisio.eu/en/blog/2020/06/01/building-cpp-containers-using-docker-and-cmake/)
 
+[返回目錄](#contents)
 
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
