@@ -300,6 +300,14 @@ git clone --depth=1 --branch=v5.0.3 https://github.com/qt-creator/qt-creator.git
 cd qt-creator
 cmake -DCMAKE_BUILD_TYPE=Debug -GNinja "-DCMAKE_PREFIX_PATH=/home/keroro/Program_Files/Qt6/build/android;/home/keroro/Program_Files/qt-creator/llvm;/home/keroro/Program_Files/Qt6/build/qtbase" -H. -Bbuild
 ```
+3. 開啟qtcreator
+```mermaid
+flowchart LR
+
+Tools-->Options-->Kits-->Tab[/Qt Versions\]-->add([Add])
+--/home/keroro/Program_Files/Qt6/build/android/bin/qmake-->appy([Apply])
+```
+就會出現**Android Kits**。
 
 [返回目錄](#contents)
 
