@@ -203,33 +203,84 @@ source ~/.bashrc
 echo $DISPLAY  # 检验一下
 startxfce4  # 启动
 ```
+<span id="Qt"></span>
+## Qt安裝
+直接去github下載源碼，不要去官網註冊和下載。
 
-* Qt安裝[1]
-首先去官網 http://download.qt.io/archive/qt/ 下載安裝包，等待安裝完成
-#### 路徑配置
-```
-sudo vim /usr/lib/x86_64-linux-gnu/qt-default/qtchooser/default.conf
-```
-将第一行改为自己安装路径下的bin目录的路径，第二行改为Qt5.12.3目录的路径
-```
-/opt/Qt5.11.3/5.11.3/gcc_64/bin
-/opt/Qt5.11.3
-```
-[1] https://blog.csdn.net/anyuliuxing/article/details/90369822
+編譯**Qt**之前需要先安裝的[libraries](https://wiki.qt.io/Building_Qt_5_from_Git):
+* Libxcb:
+`sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev`
+* Qt Multimedia:
+`sudo apt-get install libasound2-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-good1.0-dev`
+注意安裝`libgstreamer-plugins-bad1.0-dev`會包含`libopencv`預編譯版本，所以不要裝。
+* QDoc Documentation Generator Tool:
+`sudo apt install libclang-6.0-dev llvm-6.0`
+* Qt WebEngine:
+`sudo apt-get install libxcursor-dev libxcomposite-dev libxdamage-dev libxrandr-dev libxtst-dev libxss-dev libdbus-1-dev libevent-dev libfontconfig1-dev libcap-dev libpulse-dev libudev-dev libpci-dev libnss3-dev libasound2-dev libegl1-mesa-dev`
 
-##### optional
-```
-sudo apt-get install qtchooser
-```
-在(/usr/lib/x86_64-linux-gnu/下一個qtchooser)
-```
-sudo vim /usr/lib/x86_64-linux-gnu/qtchooser/default.conf
-```
-把路径换为安装过的路径
 ```shell
-/opt/Qt5.11.3/5.11.3/gcc_64/bin
-/opt/Qt5.11.3
+git clone --depth=1 --branch=v6.2.1 --recursive https://github.com/qt/qt5.git
+mv qt5 Qt6
+cd Qt6
+perl init-repository #如果有做recursive可以不用initial
+cmake -HQt6 -BQt6/build
+cmake --build Qt6/build -t install -j$(($(nproc)/2))
+#預設CMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/qtbase
 ```
+
+### [Qt for Android](https://doc-snapshots.qt.io/qt6-6.2/android-building.html)
+
+* 安裝**JDK**
+[sdkmanager參考步驟](https://linoxide.com/install-android-sdk-manager-ubuntu/)
+[參考安裝舊版本](https://stackoverflow.com/questions/49507160/how-to-install-jdk-10-under-ubuntu)，去[JDK](https://jdk.java.net/archive/)官網下載舊版本。
+```shell
+#1. 最簡單安裝，但版本會是新版
+sudo apt-get install default-jdk
+#2. 安裝舊版本
+tar -xzf openjdk-10_linux-x64_bin.tar.gz
+sudo mv jdk-10 /usr/lib/jvm/java-10-openjdk-amd64/
+sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-10-openjdk-amd64/bin/java 10
+sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-10-openjdk-amd64/bin/javac 10
+```
+* 安裝**NDK**
+1. 直接用**Android Studio**下載並安裝對應的版本，e.g. Qt **6.2.1**對應的版本是`21.3.6528147`，`android-30`
+2. 設定環境變數`~/.bashrc`
+```shell
+# <<< Qt6
+export JAVA_HOME=/usr/lib/jvm/java-10-openjdk-amd64
+export PATH=$PATH:$JAVA_HOME/bin
+export PATH=$PATH:/home/keroro/Program_Files/Qt6/build/qtbase/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/keroro/Program_Files/Qt6/build/qtbase/lib
+# 下面好像不是必要
+export QT_QPA_PLATFORM_PLUGIN_PATH=/home/keroro/Program_Files/Qt6/build/qtbase/plugins/platforms
+# <<< sdkmanager
+export PATH=$PATH:/home/keroro/Program_Files/Android/Sdk/tools/bin:/home/keroro/Program_Files/Android/Sdk/tools
+```
+3. 將`/path/to/src/Qt6/qtbase/CMakeLists.txt`的一段關於`examples`部份註解掉，因為後面Config不知道為啥出錯：
+```shell
+qt_build_repo_end()
+#---- at EOF ~ line 175 
+if(NOT QT_BUILD_STANDALONE_TESTS AND QT_BUILD_EXAMPLES)
+    #add_subdirectory(examples) <----註解掉
+endif()
+```
+4. 注意CMake的版本要大於`3.21.x`以上，才有支援`DCMAKE_TOOLCHAIN_FILE`的[Flag](https://developer.android.com/ndk/guides/cmake)。
+參考[cmake-toolchains](https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html)
+5. 開始編譯：
+`QT_HOST_PATH`為前面Qt安裝的路徑。
+```shell
+cd /path/to/src/Qt6
+cmake -DQT_BUILD_TOOLS_WHEN_CROSS_COMPILING=ON -DQT_HOST_PATH=/home/keroro/Program_Files/Qt6/build/qtbase \
+-DCMAKE_INSTALL_PREFIX=/home/keroro/Program_Files/Qt6/build/android \
+-DWARNINGS_ARE_ERRORS=OFF -DQT_QMAKE_TARGET_MKSPEC=android-clang -DANDROID_SDK_ROOT=/home/keroro/Program_Files/Android/Sdk -DANDROID_NDK_ROOT=/home/keroro/Program_Files/Android/Sdk/ndk/21.3.6528147 -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF\
+-DCMAKE_ANDROID_ABI=arm64-v8a -DCMAKE_SYSTEM_NAME=Android\
+-DCMAKE_TOOLCHAIN_FILE=/home/keroro/Program_Files/Android/Sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake\
+-H. -Bandroid-build -GNinja
+
+cmake --build andorid-build -t install -j$(($(nproc)/2))
+```
+
+[返回目錄](#contents)
 
 * VTK安裝
 直接使用apt-get安裝：
