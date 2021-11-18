@@ -6,6 +6,7 @@
   * 安裝環境
   * [支援網頁播放視頻](#video)
   * [安裝CMake](#cmake)
+  * [安裝Qt](#Qt)
   * [Kdiff3安裝](#kdiff3)
   * [pandoc安裝](#pandoc)
   * [安裝GPU](#nvidia)
@@ -278,6 +279,26 @@ cmake -DQT_BUILD_TOOLS_WHEN_CROSS_COMPILING=ON -DQT_HOST_PATH=/home/keroro/Progr
 -H. -Bandroid-build -GNinja
 
 cmake --build andorid-build -t install -j$(($(nproc)/2))
+```
+
+### Qt Creator
+1. 下載官方版本的[llvm/clang](https://github.com/qt-creator/qt-creator#getting-llvmclang-for-the-clang-code-model)來編譯
+```shell
+git clone -b release_110-based --depth=1 --recursive https://code.qt.io/clang/llvm-project.git
+cd llvm-project
+cmake \
+  -D CMAKE_BUILD_TYPE=Release \
+  -D LLVM_ENABLE_RTTI=ON \
+  -D LLVM_ENABLE_PROJECTS="clang;clang-tools-extra" \
+  -D CMAKE_INSTALL_PREFIX=/home/keroro/Program_Files/qt-creator/llvm \
+  -Hllvm -Bbuild
+```
+2. 開始編譯qt-creator
+記得包含前面建置出來的android庫，和包含原始Qt編譯出來的主要庫
+```shell
+git clone --depth=1 --branch=v5.0.3 https://github.com/qt-creator/qt-creator.git
+cd qt-creator
+cmake -DCMAKE_BUILD_TYPE=Debug -GNinja "-DCMAKE_PREFIX_PATH=/home/keroro/Program_Files/Qt6/build/android;/home/keroro/Program_Files/qt-creator/llvm;/home/keroro/Program_Files/Qt6/build/qtbase" -H. -Bbuild
 ```
 
 [返回目錄](#contents)
