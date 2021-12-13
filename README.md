@@ -250,10 +250,6 @@ sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-10-ope
 # <<< Qt6
 export JAVA_HOME=/usr/lib/jvm/java-10-openjdk-amd64
 export PATH=$PATH:$JAVA_HOME/bin
-export PATH=$PATH:/home/keroro/Program_Files/Qt6/build/qtbase/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/keroro/Program_Files/Qt6/build/qtbase/lib
-# 下面好像不是必要
-export QT_QPA_PLATFORM_PLUGIN_PATH=/home/keroro/Program_Files/Qt6/build/qtbase/plugins/platforms
 # <<< sdkmanager
 export PATH=$PATH:/home/keroro/Program_Files/Android/Sdk/tools/bin:/home/keroro/Program_Files/Android/Sdk/tools
 ```
@@ -273,13 +269,16 @@ endif()
 cd /path/to/src/Qt6
 cmake -DQT_BUILD_TOOLS_WHEN_CROSS_COMPILING=ON -DQT_HOST_PATH=/home/keroro/Program_Files/Qt6/build/qtbase \
 -DCMAKE_INSTALL_PREFIX=/home/keroro/Program_Files/Qt6/build/android \
--DWARNINGS_ARE_ERRORS=OFF -DQT_QMAKE_TARGET_MKSPEC=android-clang -DANDROID_SDK_ROOT=/home/keroro/Program_Files/Android/Sdk -DANDROID_NDK_ROOT=/home/keroro/Program_Files/Android/Sdk/ndk/21.3.6528147 -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF\
--DCMAKE_ANDROID_ABI=arm64-v8a -DCMAKE_SYSTEM_NAME=Android\
--DCMAKE_TOOLCHAIN_FILE=/home/keroro/Program_Files/Android/Sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake\
+-DWARNINGS_ARE_ERRORS=OFF -DQT_QMAKE_TARGET_MKSPEC=android-clang -DANDROID_SDK_ROOT=/home/keroro/Program_Files/Android/Sdk -DANDROID_NDK_ROOT=/home/keroro/Program_Files/Android/Sdk/ndk/21.3.6528147 -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF \
+-DCMAKE_ANDROID_ARCH_ABI=x86_64 -DCMAKE_SYSTEM_NAME=Android -DANDROID_PLATFORM=30 -DANDROID_ABI=x86_64 \
+-DCMAKE_TOOLCHAIN_FILE=/home/keroro/Program_Files/Android/Sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake \
 -H. -Bandroid-build -GNinja
 
 cmake --build andorid-build -t install -j$(($(nproc)/2))
 ```
+注意一定要確認**config**是哪個平台的建置，需要仔細設定`ANDROID_ABI`、`CMAKE_ANDROID_ARCH_ABI`到底是建置哪個平台，不然會被設置為預設值。`ANDROID_PLATFORM`、`CMAKE_SYSTEM_NAME`好像就沒關係，toolchain會自動偵測。
+
+將所有編譯**Android**的庫，藉由參數`CMAKE_INSTALL_PREFIX`集中放在統一路徑，方便管理和後續的連結。
 
 ### Qt Creator
 1. 下載官方版本的[llvm/clang](https://github.com/qt-creator/qt-creator#getting-llvmclang-for-the-clang-code-model)來編譯
@@ -298,14 +297,14 @@ cmake \
 ```shell
 git clone --depth=1 --branch=v5.0.3 https://github.com/qt-creator/qt-creator.git
 cd qt-creator
-cmake -DCMAKE_BUILD_TYPE=Debug -GNinja "-DCMAKE_PREFIX_PATH=/home/keroro/Program_Files/Qt6/build/android;/home/keroro/Program_Files/qt-creator/llvm;/home/keroro/Program_Files/Qt6/build/qtbase" -H. -Bbuild
+cmake -DCMAKE_BUILD_TYPE=Debug -GNinja "-DCMAKE_PREFIX_PATH=/home/keroro/Program_Files/Android;/home/keroro/Program_Files/qt-creator/llvm;/home/keroro/Program_Files/Qt6/build/qtbase" -H. -Bbuild
 ```
 3. 開啟qtcreator
 ```mermaid
 flowchart LR
 
 Tools-->Options-->Kits-->Tab[/Qt Versions\]-->add([Add])
---/home/keroro/Program_Files/Qt6/build/android/bin/qmake-->appy([Apply])
+--/home/keroro/Program_Files/Android/bin/qmake-->appy([Apply])
 ```
 就會出現**Android Kits**。
 
