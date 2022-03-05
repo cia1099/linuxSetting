@@ -1,0 +1,23 @@
+[user]
+	email = otto.lin@patere.net
+	name = otto@Ubuntu20_04
+
+[diff]
+	tool = kdiff3#vscode
+	guitool = kdiff3
+[difftool "kdiff3"]
+	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$LOCAL\" \"$REMOTE\" #"code --wait --diff" \"$LOCAL\" \"$REMOTE\"
+	path = /home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3
+	trustExitCode = false
+	prompt = false
+[merge]
+	tool = kdiff3
+[mergetool "kdiff3"]
+	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+	path = /home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3
+	trustExitCode = false
+	keepBackup = false
+[alias]
+	tree = log --graph --decorate --pretty=oneline --abbrev-commit --all
+[http]
+	cookiefile = /home/cia1099/.gitcookies

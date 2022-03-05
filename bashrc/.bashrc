@@ -21,6 +21,7 @@ close (){
 # <<< flutter
 export PATH=$PATH:/home/keroro/Program_Files/flutter/bin
 export ANDROID_SDK_ROOT=/home/keroro/Android/Sdk
+export CHROME_EXECUTABLE=/opt/microsoft/msedge-beta/microsoft-edge-beta
 
 # <<< CPU and memory check in process
 function procpu(){

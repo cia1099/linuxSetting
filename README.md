@@ -717,27 +717,32 @@ git count-objects -v
 
 ##### Container
 * 查看所有container
-`sudo docker container ls -a`
+`docker container ls -a`
 
 * 查看線上執行的容器
-`sudo docker ps`
+`docker ps`
 
 * 刪除容器
-`sudo docker rm <NAME>`
+`docker rm <NAME>`
 
 * 啟動容器
-`sudo docker start <NAME>`
+`docker start <NAME>`
 
 * 關閉容器
-`sudo docker stop <NAME>`
+`docker stop <NAME>`
 
 * 以root身份進入容器
-`sudo docker exec -ti <NAME> bash`
+`docker exec -ti <NAME> bash`
 
 * 建立一種容器，讓該容器可以運行GUI程式權限
 ```shell
-sudo docker run --name=<NAME> -ti \
+# 要讓容器支援GUI必須先執行
+xhost +local:docker
+
+docker run --name=<NAME> -ti \
 -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix <IMAGE:TAG>
+# 關閉容器後，也關xhost
+xhost -local:docker
 ```
 [顯示方法參考資料 1](http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/)
 
@@ -800,10 +805,10 @@ docker-compose up
 [docker 複製檔案參考資料](https://www.cloudsavvyit.com/10520/how-to-run-gui-applications-in-a-docker-container/)
 
 * 複製檔案到容器
-`sudo docker cp <local-filePATH> <NAME>:<dest-path>`
+`docker cp <local-filePATH> <NAME>:<dest-path>`
 
 * 複製容器檔案到主機
-`sudo docker cp <NAME>:<dest-filePATH> <local-dest-path>`
+`docker cp <NAME>:<dest-filePATH> <local-dest-path>`
 
 [參考資料](https://support.sitecore.com/kb?id=kb_article_view&sysparm_article=KB0383441)
 
@@ -812,9 +817,9 @@ docker-compose up
 #### Images
 
 * 查看所有images:
-`sudo docker images -a`
+`docker images -a`
 * 刪除某個image
-`sudo docker image rm <image-REPOSITORY:with-TAG>`
+`docker image rm <image-REPOSITORY:with-TAG>`
 
 * [DockerFile寫法](https://www.jmoisio.eu/en/blog/2020/06/01/building-cpp-containers-using-docker-and-cmake/)
 
