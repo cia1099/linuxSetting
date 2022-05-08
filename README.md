@@ -16,11 +16,12 @@
     * [Conda環境安裝cuda和cudnn](#conda)
       * 查看Conda ENV python 版本
     * [解除安裝cuda](#uninstall_cuda)
-  * [安裝OpenCV](#opencv)
+  * [安裝OpenCV和Ceres](#opencv)
   * [偵測USB相機編號](#webcam)
   * [源碼解安裝](#makeuninstall)
   * [git 操作](#git)
   * [docker 操作](#docker)
+  * [vscode 套件安装和设定](#vscode)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
@@ -100,6 +101,10 @@ systemctl restart systemd-logind.service
 * 檢查安裝包
 
 #### 1. [APT HowTo](https://www.debian.org/doc/manuals/apt-howto/index.zh-cn.html#contents)
+最新版Ubuntu 22存在Bug，就算用sudo作apt或dpkg，还是发生Permission Denied，[暂时解决办法为](https://askubuntu.com/questions/954862/couldnt-be-accessed-by-user-apt-pkgacquirerun-13-permission-denied)：
+
+`sudo chown _apt /var/lib/update-notifier/package-data-downloads/partial/`
+
 ```shell
 '''
 apt-cache 命令則是針對本地數據進行相關操作的工具，
@@ -423,6 +428,14 @@ pandoc 相關格式與參數設定可參考：
 
 <span id="nvidia"></span>
 #### 安裝GPU
+現在安裝系統都已經有顯示卡的ppa，因此直接輸入以下指令就能直接裝好所有驅動：
+```
+sudo ubuntu-drivers autoinstall
+```
+参考：https://askubuntu.com/questions/1033785/external-monitor-not-detected-on-ubuntu-18-04
+
+所以以下驱动步骤可以省略。
+
 [reference](https://gitpress.io/@chchang/install-nvidia-driver-cuda-pgstrom-in-ubuntu-1804)
 [Official](https://gist.github.com/wangruohui/df039f0dc434d6486f5d4d098aa52d07)
 ```shell
@@ -483,7 +496,7 @@ lshw -c multimedia
 # 查看audio的driver是否為snd_hda_intel
 lspci -nnk | grep -A2 Audio
 # 查看音效卡所使用的codec，要注意`/proc/asound/`目錄下`card`的編號，找到編號廠商為Realtek
-cat /proc/asound/card1/codec*
+head /proc/asound/card1/codec*
 # 在網站(codec)雖然找到ALC1220對應的是dual-codecs，但不知道為啥不能啟用，然而用下一個`clevo-p950`卻成功了，很神奇卻也很鳥。編輯alas檔：
 echo "options snd-hda-intel model=clevo-p950" | sudo tee -a /etc/modprobe.d/alsa-base.conf
 echo "options snd-hda-intel probe_mask=0x1" | sudo tee -a /etc/modprobe.d/alsa-base.conf
@@ -510,6 +523,10 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8 #其中8表
 ```shell
 # 檢查cuda所連結的版本
 ll /usr/local |grep cuda
+# 支持切换cuda
+sudo update-alternatives --install /usr/local/cuda cuda /usr/local/cuda-10.2 10
+sudo update-alternatives --config cuda
+#--------以下指令过时，待删除
 # 刪除原本連結的cuda位置
 sudo rm /etc/alternatives/cuda
 # 建立xx版本的連結到原來位置
@@ -824,6 +841,20 @@ docker-compose up
 * [DockerFile寫法](https://www.jmoisio.eu/en/blog/2020/06/01/building-cpp-containers-using-docker-and-cmake/)
 
 [返回目錄](#contents)
+
+<span id="vscode"></span>
+### VScode 套件安装和设定
+* 如果发现VScode的字体很丑的话，记得旧版的好看字体是**Courier New**，将最新版本的丑字体换回去(如果不能接受的话)；注意丑字体不是改在fontFamily里的`monospace`。[参考](https://techstacker.com/change-vscode-code-font/)
+
+* vscode有很多套件要安装，而且还要再设定，尤其是Flutter的套件设定差别很大，这里提供一些设定的参考：
+  1. [Flutter plugin](https://gbaccetta.medium.com/visual-studio-code-setup-for-flutter-extensions-and-plugins-i-use-to-speed-up-my-development-27a73bdfd0e4)
+
+### 安装CuteFish Desktop
+目前cutefish还是测试版，可以安装桌面在Ubuntu系统里，安装方法连接：
+1. https://github.com/cutefish-ubuntu/cutefish-desktop-ubuntu
+2. https://askubuntu.com/questions/1346383/how-to-install-cutefish-desktop-in-ubuntu
+
+注意跑脚本一次build的过程可能会发生error，会让有些库没安装和建置成功，因此要回头检查那些库没安装完成，再个别处理。
 
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
