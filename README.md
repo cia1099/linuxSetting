@@ -28,25 +28,38 @@ Linux
 ----
  * 安裝環境
 ```shell
+#----重灌系統的第一步，在安裝所有驅動前最好先更新！
+sudo apt-get update -qq && sudo apt-get upgrade -y
 sudo apt-get install build-essential #install make
 sudo apt-get install g++
-//----安裝新酷音
-sudo apt-get install ibus-chewing
+#----安裝智能拼音
+sudo apt-get install ibus-libpinyin
 
-//-----安裝VSCode
-//先去官網下載.deb檔案
-sudo dpkg -i [code file name].deb
-
-//------安裝小畫家
-sudo apt-get install kolourpaint //記得別裝到kolourpaint4，是舊版
+#------安裝小畫家
+sudo apt-get install kolourpaint #記得別裝到kolourpaint4，是舊版
 #------顯示已安裝的列表
 sudo dpkg --get-selections
 ```
 [Ubuntu install Chewing](https://medium.com/@racktar7743/ubuntu-%E5%9C%A8-ubuntu-18-04-%E4%B8%AD%E6%96%B0%E5%A2%9E%E6%96%B0%E9%85%B7%E9%9F%B3%E8%BC%B8%E5%85%A5%E6%B3%95-4aa85782f656)
 
-**注意**:如果你在安裝一個軟件之後，無法立即使用`Tab`鍵補全這個命令，你可以嘗試先執行`source ~/.zshrc`(在我本地ubuntu只見到`~/.bashrc`)，然後你就可以使用補全操作。
+* #### 掛載其他硬盤
+[參考資料](https://www.simplified.guide/linux/disk-mount), [Ask Ubuntu](https://askubuntu.com/questions/205841/how-do-i-mount-a-folder-from-another-partition)
+這裏的範例是安裝了兩個ubuntu系統，系統keroro掛載系統cia1099的資料，cia1099裝在`/dev/sda3`：
+```shell
+df -h # 檢查可掛的硬盤
+#----要先將硬盤掛載到指定的資料夾，這樣才能指定出路徑，製造鍵結
+cd ~
+mkdir -p disk
+sudo vi /etc/fstab
+#Add an entry for a new mount point
+/dev/sda3       /home/keroro/disk ext4    defaults        0       2
+# exit vim
+sudo mount -a
+ln -s /home/keroro/disk/home/cia1099/project/ /home/keroro/
+```
 
-* ####  `.bashrc`範例：
+* ####  [.bashrc](bashrc/.bashrc)範例：
+**注意**:如果你在安裝一個軟件之後，無法立即使用`Tab`鍵補全這個命令，你可以嘗試先執行`source ~/.zshrc`(在我本地ubuntu只見到`~/.bashrc`)，然後你就可以使用補全操作。
 ```shell
 export CUDA_HOME=/usr/local/cuda
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64
@@ -96,14 +109,12 @@ sudo gedit /etc/systemd/logind.conf
 systemctl restart systemd-logind.service
 ```
 
+#### [Remove grub in boot](https://www.binaryera.com/2020/08/RemoveGrubFromWindow10.html?m=1)
 
 ---
 * 檢查安裝包
 
 #### 1. [APT HowTo](https://www.debian.org/doc/manuals/apt-howto/index.zh-cn.html#contents)
-最新版Ubuntu 22存在Bug，就算用sudo作apt或dpkg，还是发生Permission Denied，[暂时解决办法为](https://askubuntu.com/questions/954862/couldnt-be-accessed-by-user-apt-pkgacquirerun-13-permission-denied)：
-
-`sudo chown _apt /var/lib/update-notifier/package-data-downloads/partial/`
 
 ```shell
 '''
@@ -434,11 +445,12 @@ sudo ubuntu-drivers autoinstall
 ```
 参考：https://askubuntu.com/questions/1033785/external-monitor-not-detected-on-ubuntu-18-04
 
-所以以下驱动步骤可以省略。
+有時候直接用上述指令會系統崩潰，這時還是要下述步骤來安裝驅動。
 
 [reference](https://gitpress.io/@chchang/install-nvidia-driver-cuda-pgstrom-in-ubuntu-1804)
 [Official](https://gist.github.com/wangruohui/df039f0dc434d6486f5d4d098aa52d07)
 ```shell
+# 新的ubuntu都已經有ppa和ubuntu-drivers
 sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt update
 sudo apt install ubuntu-drivers-common
@@ -451,6 +463,17 @@ nvidia-smi #查看GPU資訊
 nvidia-modprobe #將驅動手動啟動載入至系統
 ```
 <font color=ff00>如果找不到驅動，要將BIOS的Secure Boot設為Disable</font>
+而萬一你錯過了[MOK](https://clay-atlas.com/blog/2022/04/30/nvidia-smi-failed-communicate/)的畫面、並且在下次重新啟動時也沒有進入 MOK 畫面，或許你可以執行以下指令來重新進行這些程序：
+```shell
+sudo mokutil --import /var/lib/shim-signed/mok/MOK.der
+```
+##### MOK 畫面時的操作步驟
+1. 在配置安全啟動（configure secure boot）時設定密碼，並記起密碼
+2. 當你進入 Perform MOK management 畫面時，請選擇 Enroll MOK > Continue > Yes
+3. 在 Enroll the key(s)? 畫面時，輸入剛才步驟 1. 的密碼。
+4. 選擇 OK 重新啟動
+5. 在重新啟動後，使用 nvidia-smi 指令確認驅動程式已經正常運作
+
 * ##### 安裝CUDA
 同樣採用官網下載deb 回來安裝的方法
 到這邊 https://developer.nvidia.com/cuda-downloads 
@@ -496,12 +519,12 @@ lshw -c multimedia
 # 查看audio的driver是否為snd_hda_intel
 lspci -nnk | grep -A2 Audio
 # 查看音效卡所使用的codec，要注意`/proc/asound/`目錄下`card`的編號，找到編號廠商為Realtek
-head /proc/asound/card1/codec*
+head /proc/asound/card0/codec*
 # 在網站(codec)雖然找到ALC1220對應的是dual-codecs，但不知道為啥不能啟用，然而用下一個`clevo-p950`卻成功了，很神奇卻也很鳥。編輯alas檔：
 echo "options snd-hda-intel model=clevo-p950" | sudo tee -a /etc/modprobe.d/alsa-base.conf
 echo "options snd-hda-intel probe_mask=0x1" | sudo tee -a /etc/modprobe.d/alsa-base.conf
 # index 要輸入號碼是card的幾號
-echo "options snd-hda-intel index=1" | sudo tee -a /etc/modprobe.d/alsa-base.conf
+echo "options snd-hda-intel index=0" | sudo tee -a /etc/modprobe.d/alsa-base.conf
 ```
 <span id="gcc"></span>
 #### 修改gcc和g++使得nvcc的版本兼容
@@ -526,11 +549,6 @@ ll /usr/local |grep cuda
 # 支持切换cuda
 sudo update-alternatives --install /usr/local/cuda cuda /usr/local/cuda-10.2 10
 sudo update-alternatives --config cuda
-#--------以下指令过时，待删除
-# 刪除原本連結的cuda位置
-sudo rm /etc/alternatives/cuda
-# 建立xx版本的連結到原來位置
-sudo ln -s /usr/local/cuda-xx /etc/alternatives/cuda
 ```
 
 [返回目錄](#contents)
