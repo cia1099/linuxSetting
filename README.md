@@ -203,6 +203,8 @@ tar xzvf cmake-3.15.6.tar.gz
 sudo apt-get install libncurses5-dev #in order to install ccmake 
 cd cmake-3.15.6
 cmake -D BUILD_CursesDialog=ON
+# Don't forget openssl
+sudo apt-get install libssl-dev
 ./bootstrap --qt-gui
 # if qt-gui fail, check this command
 #sudo apt-get install qtbase5-dev #in order build qtbase cmake
@@ -867,6 +869,7 @@ docker-compose up
 * vscode有很多套件要安装，而且还要再设定，尤其是Flutter的套件设定差别很大，这里提供一些设定的参考：
   1. [Flutter plugin](https://gbaccetta.medium.com/visual-studio-code-setup-for-flutter-extensions-and-plugins-i-use-to-speed-up-my-development-27a73bdfd0e4)
   2. 要使用**Marp**套件，要关闭**Markdown-preview-enhanced: Hide Default VSCode Markdown Preview Buttons**
+  3. [Quick Fix: Keyboard shortcut CTRL+. shows a small 'e'](https://github.com/microsoft/vscode/issues/142583)。因爲ibus的快捷鍵衝突，在終端輸入`ibus-setup`進入設定。
 
 ### 安装CuteFish Desktop
 目前cutefish还是测试版，可以安装桌面在Ubuntu系统里，安装方法连接：
