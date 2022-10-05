@@ -1,0 +1,11 @@
+{
+    "server":"3.38.135.93",
+    "server_port":8325,
+    "local_address":"127.0.0.1",
+    "local_port":1080,
+    "password":"sonic747",
+    "timeout":400,
+    "method":"rc4-md5",
+    "fast_open":false,
+    "plugin":"ss-v2ray-plugin"
+}
