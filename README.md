@@ -734,6 +734,46 @@ git gc --aggressive --prune=now
 git count-objects -v
 ```
 
+##### git submodule
+https://stackoverflow.com/questions/34764193/git-submodule-from-local-folder
+[以下参考](https://blog.longwin.com.tw/2015/05/git-submodule-add-remove-2015/)
+* ###### 新增
+```shell
+# git submodule add --name <you design name> <path>
+git submodule add --name grpc https://github.com/grpc/grpc.git
+# local file
+git submodule add --name useless file:///home/keroro/project/linuxSetting
+```
+注意用本地档案的submodule只可以在本地路径有相同的资料下，才有作用。
+如果没给`--name`参数的话，预设会在`lib/<repository>`。
+1. git submodule 新增後，會寫入下述兩個地方：
+    * .git/config
+    * .gitmodules
+2. `cat .gitmodules` # 此檔案會新增出
+來，記得要一起 commit 進去
+```git
+[submodule "grpc"]
+    path = grpc
+    url = https://github.com/grpc/grpc.git
+```
+3. `git submodule init` # 初始化，只有第一次要做，讓 git 認得有此 module (以後都做 update)，不過以後每次都重複執行此行也沒關係
+4. `cat .git/config` # 查看新增狀況
+```git
+[submodule "grpc"]
+	url = https://github.com/grpc/grpc.git
+```
+5. `git submodule update` # 以後都使用這個
+* ###### 移除
+```shell
+git rm -rf grpc/
+git rm .gitmodules
+git commit -m "Remove submodule" -a
+vi .git/config # 移除 [submodule "grpc"] 那兩行
+```
+
+
+
+
 [返回目錄](#contents)
 
 #### GCC 優化參數
