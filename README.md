@@ -910,6 +910,9 @@ docker-compose up
   1. [Flutter plugin](https://gbaccetta.medium.com/visual-studio-code-setup-for-flutter-extensions-and-plugins-i-use-to-speed-up-my-development-27a73bdfd0e4)
   2. 要使用**Marp**套件，要关闭**Markdown-preview-enhanced: Hide Default VSCode Markdown Preview Buttons**
   3. [Quick Fix: Keyboard shortcut CTRL+. shows a small 'e'](https://github.com/microsoft/vscode/issues/142583)。因爲ibus的快捷鍵衝突，在終端輸入`ibus-setup`進入設定。
+* vscode复制粘贴[不带背景](https://cgfootman.com/2019/01/09/copy-and-paste-from-VSCode-without-the-background/)设定:
+  1. File > preferences > Settings
+  2. Type `editor.copyWithSyntaxHighlighting` in the search bar and then untick the box labelled Controls whether syntax and then close the settings page.
 
 ### 安装CuteFish Desktop
 目前cutefish还是测试版，可以安装桌面在Ubuntu系统里，安装方法连接：
