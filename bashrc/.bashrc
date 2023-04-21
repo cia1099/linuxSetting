@@ -21,7 +21,21 @@ close (){
 # <<< flutter
 export PATH=$PATH:/home/keroro/Program_Files/flutter/bin
 export ANDROID_SDK_ROOT=/home/keroro/Android/Sdk
-export CHROME_EXECUTABLE=/opt/microsoft/msedge-beta/microsoft-edge-beta
+export CHROME_EXECUTABLE=/opt/microsoft/msedge/microsoft-edge
+# <<< fluttercors
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+# <<< usbfluxd
+export PATH="$PATH":"$HOME/Program_Files/usbfluxd-x86_64-libc6-libdbus13"
+# <<< NDK 29
+# export PATH="$PATH:/home/keroro/Android/Sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android"
+# export PATH="$PATH:/home/keroro/Android/Sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/29"
+# <<< used JAVA
+export JAVA_HOME=/snap/android-studio/125/android-studio/jre
+
+# <<< ubuntu 22.10 has replaced gedit
+alias gedit=gnome-text-editor
+# <<< gRPC and protobuf generator IDL
+export PATH=$PATH:/home/keroro/project/game_serve/cpp/grpc/install/bin
 
 # <<< CPU and memory check in process
 function procpu(){
