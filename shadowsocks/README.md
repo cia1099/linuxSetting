@@ -97,19 +97,29 @@ sudo apt-get install shadowsocks-v2ray-plugin
 ```shell
 sudo apt-get update -qq && sudo apt-get install -y shadowsocks-libev
 #nohup ss-local -c $YOUR_CONFIG & >/dev/null
-nohup ss-local -c seoul22.json & >/dev/null 
+nohup ss-local -c seoul22.json & >/dev/null
+# for macos
+brew install shadowsocks-libev v2ray-plugin
+ss-local -c seoul22.json --plugin v2ray-plugin
 ```
 [Firefox](https://supporthost.in/how-to-install-shadowsocks-on-ubuntu/)
 ref. https://github.com/didibaba/shadowsocks-client-on-Ubuntu
 
-* Terminal
+* Terminal proxy
 ```shell
 sudo apt-get install proxychains
 sudo vi /etc/proxychains.conf
 # Remove default ProxyList content Add "socks5 127.0.0.1 1080" to ProxyList
 proxychains curl icanhazip.com
+
+# for macos
+brew install proxychains-ng
+code /opt/homebrew/etc/proxychains.conf
+proxychains4 curl icanhazip.com
 ```
 ref. https://shadowsockshelp.github.io/Shadowsocks/linux.html
+
+macos ref. https://medium.com/@xiaoqinglin2018/mac-osx-%E4%BD%BF%E7%94%A8proxychains-ng-91ba61472fdf
 
 # To get external IP address
 ```shell
