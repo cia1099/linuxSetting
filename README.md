@@ -4,6 +4,7 @@
 
 * Contents
   * 安裝環境
+    * [修改apt-get镜像源](#apt)
   * [支援網頁播放視頻](#video)
   * [安裝CMake](#cmake)
   * [安裝Qt](#Qt)
@@ -22,6 +23,7 @@
   * [git 操作](#git)
   * [docker 操作](#docker)
   * [vscode 套件安装和设定](#vscode)
+  * [Ubuntu 安装 Apple Sillicon](#arm)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
@@ -157,6 +159,16 @@ sudo apt-get --purge remove [安裝包名] #刪除單一包，包含配置文檔
  sudo apt-get autoremove [安裝包名] #刪除安裝包與相依包
 ```
 使用`apt-get -d install [軟件名]`；下載不安裝的所有相依軟件會下載到`/var/cache/apt/archives/`目錄底下。
+
+<span id="apt"></span>
+* #### 修改`apt-get`镜像源
+例如将tw的源改为us：
+```shell
+sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get clean
+sudo sed -i 's/http:\/\/tw./http:\/\/us./g' /etc/apt/sources.list
+```
+ref. https://askubuntu.com/questions/104695/how-do-i-change-mirrors-in-ubuntu-server-from-regional-to-main
 #### 2. dpkg
 我們經常可以在網絡上見到以deb形式打包的軟件包，就需要使用dpkg命令來安裝。然而，直接使用 dpkg 安裝可能會存在一些問題，因為dpkg並不能為你解決依賴關係；遇到缺少依賴包問題可以使用`apt-get install -f`修復。
 ```shell
@@ -913,6 +925,18 @@ docker-compose up
 * vscode复制粘贴[不带背景](https://cgfootman.com/2019/01/09/copy-and-paste-from-VSCode-without-the-background/)设定:
   1. File > preferences > Settings
   2. Type `editor.copyWithSyntaxHighlighting` in the search bar and then untick the box labelled Controls whether syntax and then close the settings page.
+
+<span id="arm"></span>
+### Ubuntu install Apple Sillicon
+1. [下载UTM](https://mac.getutm.app/)
+2. google搜索"ubuntu build diary"下载Desktop for ARM
+3. 用UTM挂载ios档案，设定虚拟机配备(记得开启OpenGL加速)，启动；登入密码均是`ubuntu`
+4. 安装完毕，关机，UTM右上角按钮卸载ios，重新启动
+5. [APT Hash sum mismatch](https://blog.packagecloud.io/apt-hash-sum-mismatch/)
+  * 新增一个档案`sudo touch /etc/apt/apt.conf.d/99compression-workaround`
+  * 在档案里加入`Acquire::CompressionTypes::Order:: "gz";`，这样就可以apt-get update了
+
+[返回目錄](#contents)
 
 ### 安装CuteFish Desktop
 目前cutefish还是测试版，可以安装桌面在Ubuntu系统里，安装方法连接：
