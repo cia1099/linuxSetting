@@ -935,6 +935,13 @@ docker-compose up
 5. [APT Hash sum mismatch](https://blog.packagecloud.io/apt-hash-sum-mismatch/)
   * 新增一个档案`sudo touch /etc/apt/apt.conf.d/99compression-workaround`
   * 在档案里加入`Acquire::CompressionTypes::Order:: "gz";`，这样就可以apt-get update了
+6. VM连接共享文件夹
+```shell
+sudo apt-get install spice-vdagent spice-webdavd
+sudo systemctl reboot
+```
+
+[YouTube channel](https://www.youtube.com/watch?v=1WWj6qoWhJw)
 
 #### MacBook下操作Ubuntu
 * Super = <kdb>fn</kdb>+<kdb>&#8984;</kdb>，所以切换输入法要按 <kdb>&#8984;</kdb>+<kdb>fn</kdb>+<kdb>&#9251;</kdb>
