@@ -936,6 +936,11 @@ docker-compose up
   * 新增一个档案`sudo touch /etc/apt/apt.conf.d/99compression-workaround`
   * 在档案里加入`Acquire::CompressionTypes::Order:: "gz";`，这样就可以apt-get update了
 
+#### MacBook下操作Ubuntu
+* Super = <kdb>fn</kdb>+<kdb>&#8984;</kdb>，所以切换输入法要按 <kdb>&#8984;</kdb>+<kdb>fn</kdb>+<kdb>&#9251;</kdb>
+
+[Unicode Codes for Keyboard symbols](https://acrobatfaq.com/atbref5/index/KeyboardShortcuts/UnicodeCodesforKeyboards.html)
+
 [返回目錄](#contents)
 
 ### 安装CuteFish Desktop
