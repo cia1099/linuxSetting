@@ -935,14 +935,50 @@ docker-compose up
 5. [APT Hash sum mismatch](https://blog.packagecloud.io/apt-hash-sum-mismatch/)
   * 新增一个档案`sudo touch /etc/apt/apt.conf.d/99compression-workaround`
   * 在档案里加入`Acquire::CompressionTypes::Order:: "gz";`，这样就可以apt-get update了
-6. VM连接共享文件夹
+##### 6. VM连接共享文件夹
+要注意在UTM的虚拟机设定里，是使用那种[方式分享](https://docs.getutm.app/guest-support/linux/#virtfs)资料夹，这里是采用**VirtFS**方式
+
+第一次挂载时，要设定权限，这里挂载`project`资料夹为例：
 ```shell
-sudo apt-get install spice-vdagent spice-webdavd
-sudo systemctl reboot
+mkdir -p project
+sudo mount -t 9p -o trans=virtio share project -oversion=9p2000.L
+sudo chown -R $USER project
 ```
+每次从新启动都要输入挂载指令，因此设定[Start Up](https://itslinuxfoss.com/run-script-startup-ubuntu/)脚本可以省事
+```shell
+echo "sudo mount -t 9p -o trans=virtio share /home/$USER/project -oversion=9p2000.L" > mount.sh
+chmod a+x mount.sh
+```
+然后要在启动系统加入一个`.service`服务:
+```shell
+sudo gedit /etc/systemd/system/ScriptService.service
+```
+在ScriptService.service 里编辑 >>>
+```txt
+[Unit]
+Description=Custom Startup Script
+ 
+[Service]
+ExecStart=/home/otto/mount.sh
+ 
+[Install]
+WantedBy=default.target
+```
+* __Unit__: It stores the metadata and other information you want to store related to the script.
+* __Service__: Tells the system to execute the desired service, which will run on startup.
+* __Install__: Allows the service to run the WantedBy directory at the startup to handle the dependencies.
 
-[YouTube channel](https://www.youtube.com/watch?v=1WWj6qoWhJw)
+设定权限和启用`.service`:
+```shell
+chmod 644 /etc/systemd/system/ScriptService.service
+systemctl enable ScriptService.service
+```
+* __6__: Provides read and write permissions to the user.
+* __4__: Provides read permissions to the group and others.
+<div class="warning" style='background-color:#E9D8FD; color:#69337A'>
 
+__NOTE__: In binary mode, Read=__4__, Write=__2__, and Execute=__1__.
+</div>
 #### MacBook下操作Ubuntu
 * Super = <kdb>fn</kdb>+<kdb>&#8984;</kdb>，所以切换输入法要按 <kdb>&#8984;</kdb>+<kdb>fn</kdb>+<kdb>&#9251;</kdb>
 
