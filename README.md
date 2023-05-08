@@ -946,7 +946,12 @@ sudo chown -R $USER project
 ```
 每次从新启动都要输入挂载指令，因此设定[Start Up](https://itslinuxfoss.com/run-script-startup-ubuntu/)脚本可以省事
 ```shell
-echo "sudo mount -t 9p -o trans=virtio share /home/$USER/project -oversion=9p2000.L" > mount.sh
+touch mount.sh
+gedit mount.sh
+# <<< edit mount.sh script
+#!/bin/bash
+sudo mount -t 9p -o trans=virtio share /home/$USER/project -oversion=9p2000.L" > mount.sh
+# <<< end edit
 chmod a+x mount.sh
 ```
 然后要在启动系统加入一个`.service`服务:
