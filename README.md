@@ -984,10 +984,13 @@ systemctl enable ScriptService.service
 
 __NOTE__: In binary mode, Read=__4__, Write=__2__, and Execute=__1__.
 </div>
+
 #### MacBook下操作Ubuntu
-* Super = <kdb>fn</kdb>+<kdb>&#8984;</kdb>，所以切换输入法要按 <kdb>&#8984;</kdb>+<kdb>fn</kdb>+<kdb>&#9251;</kdb>
+* Super = <kbd>&#x1F310;</kbd> + <kbd>&#8984;</kbd>，所以切换输入法要按 <kbd>&#8984;</kbd> + <kbd>fn</kbd> + <kbd>&#9251;</kbd>
 
 [Unicode Codes for Keyboard symbols](https://acrobatfaq.com/atbref5/index/KeyboardShortcuts/UnicodeCodesforKeyboards.html)
+[Julia](https://docs.julialang.org/en/v1/manual/unicode-input/)
+https://apple.stackexchange.com/questions/55727/where-can-i-find-the-unicode-symbols-for-mac-functional-keys-command-shift-e
 
 [返回目錄](#contents)
 
