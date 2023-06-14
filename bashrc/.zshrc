@@ -13,6 +13,8 @@ export PATH=$PATH:/Applications/CMake.app/Contents/bin
 # <<< flutter
 export PATH=$PATH:/Users/otto/Downloads/flutter/bin
 export CHROME_EXECUTABLE=/Applications/Microsoft\ Edge.app/Contents/MacOS/Microsoft\ Edge
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
 # close all emulator
 export PATH=$PATH:/Users/otto/Library/Android/sdk/emulator:/Users/otto/Library/Android/sdk/platform-tools
@@ -44,3 +46,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
