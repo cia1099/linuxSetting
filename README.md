@@ -783,6 +783,16 @@ git commit -m "Remove submodule" -a
 vi .git/config # 移除 [submodule "grpc"] 那兩行
 ```
 
+##### git remote new branch to track
+当clone只有单独一个分支的话，`origin`只有追踪当初clone的那个分支，因此需要新增一个新的remote来追踪别的分支
+```shell
+git remote add -t <branch> <remote_name> <url>
+# git remote add -t plugin plugin git@gitlab.com:payneDong/im_common.git
+# This will show all remotes
+git remote -v
+git fetch <remote_name>
+```
+
 
 
 
