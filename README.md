@@ -790,7 +790,7 @@ git remote add -t <branch> <remote_name> <url>
 # git remote add -t plugin plugin git@gitlab.com:payneDong/im_common.git
 # This will show all remotes
 git remote -v
-git fetch <remote_name>
+git fetch --depth=1 <remote_name>
 ```
 
 
