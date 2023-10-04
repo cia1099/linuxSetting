@@ -6,6 +6,10 @@ alias ldd="otool -L"
 # <<< switch Rosetta
 alias x86_64="env /usr/bin/arch -x86_64 /bin/zsh --login"
 alias arm64="env /usr/bin/arch -arm64 /bin/zsh --login"
+# <<< socks5
+alias socks5="networksetup -setsocksfirewallproxystate wi-fi"
+alias proxy="export http_proxy=socks5://127.0.0.1:1080;export https_proxy=socks5://127.0.0.1:1080;export all_proxy=socks5://127.0.0.1:1080;export no_proxy=socks5://127.0.0.1:1080"
+alias unproxy="unset http_proxy;unset https_proxy;unset all_proxy;unset no_proxy"
 
 # <<< brew
 eval "$(/opt/homebrew/bin/brew shellenv)"

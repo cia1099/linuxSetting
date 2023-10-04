@@ -111,15 +111,26 @@ sudo apt-get install proxychains
 sudo vi /etc/proxychains.conf
 # Remove default ProxyList content Add "socks5 127.0.0.1 1080" to ProxyList
 proxychains curl icanhazip.com
-
-# for macos
-brew install proxychains-ng
-code /opt/homebrew/etc/proxychains.conf
-proxychains4 curl icanhazip.com
 ```
 ref. https://shadowsockshelp.github.io/Shadowsocks/linux.html
 
 macos ref. https://medium.com/@xiaoqinglin2018/mac-osx-%E4%BD%BF%E7%94%A8proxychains-ng-91ba61472fdf
+
+__MacOS 直接用`export`来设定terminal的proxy__\
+不需要proxychains这个垃圾。
+```shell
+export all_proxy=socks5://127.0.0.1:1080
+curl cip.cc
+```
+
+#### MacOS quickly turn on/off socks
+```shell
+# setup socks5
+networksetup -setsocksfirewallproxy wi-fi localhost 1080
+# turn on/off
+networksetup -setsocksfirewallproxystate wi-fi on
+networksetup -setsocksfirewallproxystate wi-fi off
+```
 
 # To get external IP address
 ```shell
