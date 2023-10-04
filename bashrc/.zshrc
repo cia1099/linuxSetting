@@ -3,6 +3,9 @@ alias text="open -a TextEdit"
 alias ll="ls -alF"
 alias simulator="open -a Simulator --args -CurrentDeviceUDID"
 alias ldd="otool -L"
+# <<< switch Rosetta
+alias x86_64="env /usr/bin/arch -x86_64 /bin/zsh --login"
+alias arm64="env /usr/bin/arch -arm64 /bin/zsh --login"
 
 # <<< brew
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -53,3 +56,10 @@ export NVM_DIR="$HOME/.nvm"
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+# <<< Rosetta mode; default PS1="%n@%m %1~ %#"
+if [ "i386" = $(arch) ]; then
+  export PS1="%B%F{green}%n@%m%f%b:%F{4}%1~%f%# "
+else
+  export PS1="%B%F{195}%n@%m%f%b:%F{103}%1~%f%# "
+fi
