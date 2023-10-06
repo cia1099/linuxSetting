@@ -6,22 +6,21 @@ alias ldd="otool -L"
 # <<< switch Rosetta
 alias x86_64="env /usr/bin/arch -x86_64 /bin/zsh --login"
 alias arm64="env /usr/bin/arch -arm64 /bin/zsh --login"
-# <<< socks5
+# <<< socks5 and proxy
 alias socks5="networksetup -setsocksfirewallproxystate wi-fi"
 alias proxy="export http_proxy=socks5://127.0.0.1:1080;export https_proxy=socks5://127.0.0.1:1080;export all_proxy=socks5://127.0.0.1:1080;export no_proxy=socks5://127.0.0.1:1080"
 alias unproxy="unset http_proxy;unset https_proxy;unset all_proxy;unset no_proxy"
 
-# <<< brew
-eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # <<< vscode
-export PATH="$PATH:/usr/local/bin"
+export PATH="$PATH:/usr/local/sbin"
 # <<< cmake
 export PATH=$PATH:/Applications/CMake.app/Contents/bin
 # <<< flutter
 export PATH=$PATH:/Users/otto/Downloads/flutter/bin
 export CHROME_EXECUTABLE=/Applications/Microsoft\ Edge.app/Contents/MacOS/Microsoft\ Edge
-export PUB_HOSTED_URL=https://pub.flutter-io.cn
-export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+# export PUB_HOSTED_URL=https://pub.flutter-io.cn
+# export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
 # close all emulator
 export PATH=$PATH:/Users/otto/Library/Android/sdk/emulator:/Users/otto/Library/Android/sdk/platform-tools
@@ -63,7 +62,13 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # <<< Rosetta mode; default PS1="%n@%m %1~ %#"
 if [ "i386" = $(arch) ]; then
-  export PS1="%B%F{green}%n@%m%f%b:%F{4}%1~%f%# "
+    export PS1="%B%F{green}%n@%m%f%b:%F{4}%1~%f%# "
+    eval "$(/usr/local/bin/brew shellenv)"
+    export PATH=$PATH:/usr/local/bin
 else
-  export PS1="%B%F{195}%n@%m%f%b:%F{103}%1~%f%# "
+    export PS1="%B%F{195}%n@%m%f%b:%F{103}%1~%f%# "
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    # remove certain path in PATH
+    local NEWPATH=$( echo ${PATH} | tr -s ":" "\n" | grep -vwE "/usr/local/bin" | tr -s "\n" ":" | sed "s/:$//" )
+    export PATH=$NEWPATH
 fi

@@ -116,6 +116,8 @@ ref. https://shadowsockshelp.github.io/Shadowsocks/linux.html
 
 macos ref. https://medium.com/@xiaoqinglin2018/mac-osx-%E4%BD%BF%E7%94%A8proxychains-ng-91ba61472fdf
 
+https://apple.stackexchange.com/questions/226544/how-to-set-proxy-on-os-x-terminal-permanently
+
 __MacOS 直接用`export`来设定terminal的proxy__\
 不需要proxychains这个垃圾。
 ```shell
