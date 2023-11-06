@@ -792,7 +792,16 @@ git remote add -t <branch> <remote_name> <url>
 git remote -v
 git fetch --depth=1 <remote_name>
 ```
-
+##### git merge
+[git merge visualization](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
+* 直接在合并时强迫优先那个分支：
+```shell
+# enforce merge by current branch to target branch
+git merge -s recursive -X ours <target branch>
+# enforce merge current branch though targe branch
+git merge -s recursive -X theirs <target branch>
+```
+ref. https://stackoverflow.com/questions/17704119/how-to-prefer-files-from-one-branch-during-a-merge
 
 
 
