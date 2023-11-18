@@ -944,6 +944,35 @@ docker-compose up
 * vscode复制粘贴[不带背景](https://cgfootman.com/2019/01/09/copy-and-paste-from-VSCode-without-the-background/)设定:
   1. File > preferences > Settings
   2. Type `editor.copyWithSyntaxHighlighting` in the search bar and then untick the box labelled Controls whether syntax and then close the settings page.
+* vscode 档案关联设定：
+在`.vscode/settings.json`加入`files.associations`属性
+```json
+// workspace
+{
+    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
+    "lldb.launch.expressions": "native",
+    "files.associations": {
+        "**/FKLibToOC/*.h": "objective-c",
+        "**/FKLibToOC/*.mm": "objective-cpp"
+    }
+}
+// vscode的设定档开头**/代表./
+// user settings
+{
+  //...
+  "files.associations": {
+        "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/**/Headers/*.h": "objective-c",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/**/Headers/*.h": "objective-c"
+    },
+    "swiftformat.options": [
+        "--ifdef",
+        "outdent"
+    ],
+}
+```
+https://code.visualstudio.com/docs/languages/identifiers
+
+https://stackoverflow.com/questions/29973619/how-to-associate-a-file-extension-with-a-certain-language-in-vs-code
 
 <span id="arm"></span>
 ### Ubuntu install Apple Sillicon
