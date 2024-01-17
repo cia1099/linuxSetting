@@ -12,7 +12,8 @@
 6. 重启ssh服务：systemctl restart ssh
 * In client input:
 ```shell
-ssh root@3.38.135.93
+ssh root@35.201.209.161 #taiwan-one
+ssh root@35.196.78.109 #usa-free
 ```
 
 # Connect Instance with SSH
@@ -29,12 +30,6 @@ ref. https://www.vpndada.com/how-to-setup-shadowsocks-server-on-amazon-ec2/
 sudo apt-get update -qq && sudo apt-get install -y shadowsocks-libev shadowsocks-v2ray-plugin
 # for below 22
 sudo apt-get update -qq && sudo apt-get install -y shadowsocks-libev simple-obfs
-# don't use script to install, that will conflict native shadowsocks-libev
-#wget --no-check-certificate -O shadowsocks-libev-debian.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-libev-debian.sh
-# chmod +x shadowsocks-libev-debian.sh
-# sudo ./shadowsocks-libev-debian.sh 2>&1 | tee shadowsocks-libev-debian.log
-# uninstall
-# ./shadowsocks-libev.sh uninstall
 ```
 ref. https://www.tititing.life/2020/10/11/ubuntu-20-04-shadowsocks-%E7%BF%BB%E7%89%86%E8%A8%98%E9%8C%84/
 ```shell
@@ -53,10 +48,13 @@ journalctl -u shadowsocks-libev -f
 ```shell
 ufw status
 ufw allow <port>
+apt-get install ufw
+ufw enable
 ```
+Port 22 是ssh用的，一定要开通，再来就是80,443是给服务端用的，剩下就开通shadowsocks对外的Port即可。 
 
 # 僞裝Http數據流，隱藏SS發送
-[v2ray](https://github.com/shadowsocks/v2ray-plugin)
+* ## [v2ray](https://github.com/shadowsocks/v2ray-plugin)
 ```shell
 sudo apt-get install shadowsocks-v2ray-plugin
 ```
@@ -67,10 +65,26 @@ sudo apt-get install shadowsocks-v2ray-plugin
     "plugin_opts": "server;tls;host=mydomain.me"
 }
 ```
+* ## [simple-obfs](https://github.com/shadowsocks/simple-obfs)
+检查`v2ray`和`obfs`在哪里？
+```shell
+which ss-v2ray-plugin
+#--> /usr/bin/ss-v2ray-plugin
+ls /usr/bin/ |grep obfs
+#--> obfs-local
+#--> obfs-server
+```
+```json
+{
+    "plugin": "obfs-server",
+    "plugin_opts": "obfs=http;obfs-host=www.baidu.com"
+}
+```
 
 # Config example
 `/etc/shadowsocks-libev/config.json`
 ```json
+//v2ray
 {
     "server":["::0","0.0.0.0"],
     "mode":"tcp_and_udp",
@@ -82,6 +96,19 @@ sudo apt-get install shadowsocks-v2ray-plugin
     "fast_open":true,
     "plugin": "ss-v2ray-plugin",
     "plugin_opts": "server;loglevel=info"
+}
+//obfs
+{
+    "server":["::0", "0.0.0.0"],
+    "mode":"tcp_and_udp",
+    "server_port":54321,
+    "local_port":1080,
+    "password":"smoke755",
+    "timeout":400,
+    "fast_open":true,
+    "plugin":"obfs-server",
+    "plugin_opts":"obfs=http;obfs-host=www.baidu.com",
+    "method":"chacha20-ietf-poly1305"
 }
 ```
 
@@ -99,8 +126,9 @@ sudo apt-get update -qq && sudo apt-get install -y shadowsocks-libev
 #nohup ss-local -c $YOUR_CONFIG & >/dev/null
 nohup ss-local -c seoul22.json & >/dev/null
 # for macos
-brew install shadowsocks-libev v2ray-plugin
+brew install shadowsocks-libev v2ray-plugin simple-obfs
 ss-local -c seoul22.json --plugin v2ray-plugin
+ss-local -c taiwan-one.json --plugin obfs-local
 ```
 [Firefox](https://supporthost.in/how-to-install-shadowsocks-on-ubuntu/)
 ref. https://github.com/didibaba/shadowsocks-client-on-Ubuntu
@@ -153,6 +181,21 @@ curl -6 icanhazip.com
     "method":"rc4-md5",
     "fast_open":false,
     "plugin":"ss-v2ray-plugin"
+}
+```
+* taiwan-one.json
+```json
+{
+    "server": "35.201.209.161",
+    "server_port": 54321,
+    "local_address": "127.0.0.1",
+    "local_port": 1080,
+    "password": "smoke755",
+    "timeout": 400,
+    "method": "chacha20-ietf-poly1305",
+    "fast_open": true,
+    "plugin": "obfs-local",
+    "plugin_opts": "obfs=http;obfs-host=www.baidu.com"
 }
 ```
 

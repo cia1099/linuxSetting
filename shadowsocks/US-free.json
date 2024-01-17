@@ -1,0 +1,12 @@
+{
+    "server": "35.196.78.109",
+    "server_port": 5566,
+    "local_address": "127.0.0.1",
+    "local_port": 1080,
+    "password": "sonic747",
+    "timeout": 400,
+    "method": "chacha20-ietf-poly1305",
+    "fast_open": true,
+    "plugin": "ss-v2ray-plugin",
+    "plugin_opts": "host=www.baidu.com"
+}
