@@ -11,6 +11,9 @@ alias socks5="networksetup -setsocksfirewallproxystate wi-fi"
 alias proxy="export http_proxy=socks5://127.0.0.1:1080;export https_proxy=socks5://127.0.0.1:1080;export all_proxy=socks5://127.0.0.1:1080;export no_proxy=socks5://127.0.0.1:1080"
 alias unproxy="unset http_proxy;unset https_proxy;unset all_proxy;unset no_proxy"
 
+# You may need to manually set your language environment
+# when your system languange is not English
+# export LANG=en_US.UTF-8
 
 # <<< vscode
 export PATH="$PATH:/usr/local/sbin"
@@ -72,3 +75,13 @@ else
     local NEWPATH=$( echo ${PATH} | tr -s ":" "\n" | grep -vwE "/usr/local/bin" | tr -s "\n" ":" | sed "s/:$//" )
     export PATH=$NEWPATH
 fi
+
+# <<< Optional environmental variable
+# --- You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details. ---
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
