@@ -792,6 +792,16 @@ git remote add -t <branch> <remote_name> <url>
 git remote -v
 git fetch --depth=1 <remote_name>
 ```
+##### pull & push
+当本地的分支名称和远程的名称不同时，可以加上`:`来指定拉下/推上的分支名，在特定的远程专案。这样就不用再加一个remote个别管理branch了。
+```shell
+git pull <remote_name> <remote_branch>:<local_branch>
+git push -u <remote_name> <local_branch>:<remote_branch>
+# 删除远程分支
+git push -d <remote_name> <remote_name>
+```
+https://stackoverflow.com/questions/19154302/git-push-to-specific-branch
+
 ##### git merge
 [git merge visualization](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
 * 直接在合并时强迫优先那个分支：
