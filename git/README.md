@@ -36,14 +36,17 @@
   keepBackup = false
 
 [difftool "code"]
-  cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
+  cmd = code -n --disable-extensions --wait --diff $LOCAL $REMOTE
   trustExitCode = true
 	prompt = false
 [mergetool "code"]
-  cmd = code --wait -- --merge $LOCAL $REMOTE $BASE $MERGED
+  cmd = code -n --disable-extensions --wait -- --merge $LOCAL $REMOTE $BASE $MERGED
   trustExitCode = false
 	keepBackup = false
 ```
+#### Used VSCode as Comparator
+记得要将restrict mode给关掉：\
+Setting搜寻`restrict`把Banner设成never，这样才不会每次开启diff window的时候都问你trust。
 
 其他系统没有`opendiff`这么酷的工具，但有类似的工具[Meld](http://meldmerge.org)
 
