@@ -954,6 +954,9 @@ docker-compose up
 * vscode复制粘贴[不带背景](https://cgfootman.com/2019/01/09/copy-and-paste-from-VSCode-without-the-background/)设定:
   1. File > preferences > Settings
   2. Type `editor.copyWithSyntaxHighlighting` in the search bar and then untick the box labelled Controls whether syntax and then close the settings page.
+* vscode 时间线不带本地储存记录:
+  将 Setting > Workbench > Local History 取消掉，就不会有File Saved记录。
+
 * vscode 档案关联设定：
 在`.vscode/settings.json`加入`files.associations`属性
 ```json
