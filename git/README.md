@@ -42,7 +42,7 @@
 [mergetool "code"]
   cmd = code -n --disable-extensions --wait -- --merge $LOCAL $REMOTE $BASE $MERGED
   trustExitCode = false
-	keepBackup = false
+  keepBackup = false
 ```
 #### Used VSCode as Comparator
 记得要将restrict mode给关掉：\
