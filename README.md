@@ -24,6 +24,7 @@
   * [docker 操作](#docker)
   * [vscode 套件安装和设定](#vscode)
   * [Ubuntu 安装 Apple Sillicon](#arm)
+  * [制作USB开机磁盘](#usb_boot)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
 
 Linux
@@ -1061,6 +1062,30 @@ https://apple.stackexchange.com/questions/55727/where-can-i-find-the-unicode-sym
 2. https://askubuntu.com/questions/1346383/how-to-install-cutefish-desktop-in-ubuntu
 
 注意跑脚本一次build的过程可能会发生error，会让有些库没安装和建置成功，因此要回头检查那些库没安装完成，再个别处理。
+
+<span id="usb_boot"></span>
+### 制作USB开机磁盘
+將 USB 隨身碟插入 Linux 的電腦中，查詢一下目前所有硬碟與 USB 隨身碟的狀況。
+```shell
+lsblk
+NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda           8:0    0 931.5G  0 disk 
+├─sda1        8:1    0 112.3G  0 part 
+├─sda2        8:2    0  19.2G  0 part 
+└─sda3        8:3    0   800G  0 part /home/disk
+sdc           8:32   1  28.5G  0 disk 
+└─sdc1        8:33   1  28.5G  0 part /media/keroro/Transcend
+nvme0n1     259:0    0 238.5G  0 disk 
+├─nvme0n1p1 259:1    0   487M  0 part /boot/efi
+└─nvme0n1p2 259:2    0   238G  0 part /var/snap/firefox/common/host-hunspell
+```
+這裡我所要使用的 USB 隨身碟是掛載在`/media/keroro/Transcend`這一個位置，而其對應的硬碟路徑則是`/dev/sdc`，找到這個代號之後，就可以繼續下一步了。
+```shell
+umount /media/keroro/Transcend
+sudo dd if=ubuntu-23.04-desktop-amd64.iso of=/dev/sdc bs=32M
+```
+[Linux 使用 dd 指令將 ISO 檔製作成 Live USB 隨身碟](https://blog.gtwang.org/linux/linux-dd-command-write-iso-to-usb-flash-drive/)
+[dd 指令教學與實用範例](https://blog.gtwang.org/linux/dd-command-examples/)
 
 <span id="shiyanlou"></span>
 ### 基本操作，參考實驗樓《Linux基礎入門》
