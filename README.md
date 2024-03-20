@@ -1050,16 +1050,12 @@ __NOTE__: In binary mode, Read=__4__, Write=__2__, and Execute=__1__.
 #### MacBook下操作Ubuntu
 * Super = <kbd>&#x1F310;</kbd> + <kbd>&#8984;</kbd>，所以切换输入法要按 <kbd>&#8984;</kbd> + <kbd>fn</kbd> + <kbd>&#9251;</kbd>
 
-[Unicode Codes for Keyboard symbols](https://acrobatfaq.com/atbref5/index/KeyboardShortcuts/UnicodeCodesforKeyboards.html)
-[Julia](https://docs.julialang.org/en/v1/manual/unicode-input/)
+[Unicode Codes for Keyboard symbols](https://acrobatfaq.com/atbref5/index/KeyboardShortcuts/UnicodeCodesforKeyboards.html)\
+[Julia](https://docs.julialang.org/en/v1/manual/unicode-input/)\
 https://apple.stackexchange.com/questions/55727/where-can-i-find-the-unicode-symbols-for-mac-functional-keys-command-shift-e
 
 [返回目錄](#contents)
 
-### 安装CuteFish Desktop
-目前cutefish还是测试版，可以安装桌面在Ubuntu系统里，安装方法连接：
-1. https://github.com/cutefish-ubuntu/cutefish-desktop-ubuntu
-2. https://askubuntu.com/questions/1346383/how-to-install-cutefish-desktop-in-ubuntu
 
 注意跑脚本一次build的过程可能会发生error，会让有些库没安装和建置成功，因此要回头检查那些库没安装完成，再个别处理。
 
@@ -1084,7 +1080,7 @@ nvme0n1     259:0    0 238.5G  0 disk
 umount /media/keroro/Transcend
 sudo dd if=ubuntu-23.04-desktop-amd64.iso of=/dev/sdc bs=32M
 ```
-[Linux 使用 dd 指令將 ISO 檔製作成 Live USB 隨身碟](https://blog.gtwang.org/linux/linux-dd-command-write-iso-to-usb-flash-drive/)
+[Linux 使用 dd 指令將 ISO 檔製作成 Live USB 隨身碟](https://blog.gtwang.org/linux/linux-dd-command-write-iso-to-usb-flash-drive/)\
 [dd 指令教學與實用範例](https://blog.gtwang.org/linux/dd-command-examples/)
 
 <span id="shiyanlou"></span>
