@@ -724,7 +724,52 @@ git clone \
 cd cmake-cookbook
 git sparse-checkout add chapter-10
 ```
+##### git remote new branch to track
+当clone只有单独一个分支的话，`origin`只有追踪当初clone的那个分支，因此需要新增一个新的remote来追踪别的分支
+```shell
+git remote add -t <branch> <remote_name> <url>
+# git remote add -t plugin plugin git@gitlab.com:payneDong/im_common.git
+# This will show all remotes
+git remote -v
+git fetch --depth=1 <remote_name>
+```
+##### pull & push
+当本地的分支名称和远程的名称不同时，可以加上`:`来指定拉下/推上的分支名，在特定的远程专案。这样就不用再加一个remote个别管理branch了。
+```shell
+git pull <remote_name> <remote_branch>:<local_branch>
+git push -u <remote_name> <local_branch>:<remote_branch>
+# 删除远程分支
+git push -d <remote_name> <remote_name>
+```
+https://stackoverflow.com/questions/19154302/git-push-to-specific-branch
 
+##### git merge
+[git merge visualization](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
+* 直接在合并时强迫优先那个分支：
+```shell
+# enforce merge by current branch to target branch
+git merge -s recursive -X ours <target branch>
+# enforce merge current branch though targe branch
+git merge -s recursive -X theirs <target branch>
+```
+ref. https://stackoverflow.com/questions/17704119/how-to-prefer-files-from-one-branch-during-a-merge
+
+##### Display all tracking files
+想要显示所有git在追踪的档案：
+```shell
+git ls-tree -r @ --name-only
+```
+当想要复制这些档案到别的文件夹，但是目标文件夹没有目录结构，可以用`xargs`指令先建立目录结构；有了目录结构就可以完整复制所有档案了：
+```shell
+# 建立目的文件夹的结构
+git ls-tree -r @ --name-only|xargs -I {} dirname {}|xargs -I {} mkdir -p <destination_dir>/{}
+# 有了结构，就可以完整使用cp路径
+git ls-tree -r @ --name-only|xargs -I {} cp {} <destination_dir>/{}
+```
+refs:
+1. https://stackoverflow.com/questions/72253410/how-to-properly-use-xargs-with-cp
+2. https://stackoverflow.com/questions/947954/how-to-have-the-cp-command-create-any-necessary-folders-for-copying-a-file-to-a
+3. https://stackoverflow.com/questions/15606955/how-can-i-make-git-show-a-list-of-the-files-that-are-being-tracked
 ##### 縮小git的pack容量
 * https://aleen42.gitbooks.io/wiki/content/git/shrink_sizes/shrink_sizes.html
 * https://github.com/18F/C2/issues/439
@@ -783,37 +828,6 @@ git rm .gitmodules
 git commit -m "Remove submodule" -a
 vi .git/config # 移除 [submodule "grpc"] 那兩行
 ```
-
-##### git remote new branch to track
-当clone只有单独一个分支的话，`origin`只有追踪当初clone的那个分支，因此需要新增一个新的remote来追踪别的分支
-```shell
-git remote add -t <branch> <remote_name> <url>
-# git remote add -t plugin plugin git@gitlab.com:payneDong/im_common.git
-# This will show all remotes
-git remote -v
-git fetch --depth=1 <remote_name>
-```
-##### pull & push
-当本地的分支名称和远程的名称不同时，可以加上`:`来指定拉下/推上的分支名，在特定的远程专案。这样就不用再加一个remote个别管理branch了。
-```shell
-git pull <remote_name> <remote_branch>:<local_branch>
-git push -u <remote_name> <local_branch>:<remote_branch>
-# 删除远程分支
-git push -d <remote_name> <remote_name>
-```
-https://stackoverflow.com/questions/19154302/git-push-to-specific-branch
-
-##### git merge
-[git merge visualization](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
-* 直接在合并时强迫优先那个分支：
-```shell
-# enforce merge by current branch to target branch
-git merge -s recursive -X ours <target branch>
-# enforce merge current branch though targe branch
-git merge -s recursive -X theirs <target branch>
-```
-ref. https://stackoverflow.com/questions/17704119/how-to-prefer-files-from-one-branch-during-a-merge
-
 
 
 [返回目錄](#contents)
