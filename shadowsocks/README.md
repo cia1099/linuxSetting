@@ -12,8 +12,8 @@
 6. 重启ssh服务：systemctl restart ssh
 * In client input:
 ```shell
-ssh root@35.201.209.161 #taiwan-one
-ssh root@35.196.78.109 #usa-free
+ssh root@34.81.142.165 #taiwan-one
+ssh root@34.23.156.164 #usa-free
 ```
 
 # Connect Instance with SSH
