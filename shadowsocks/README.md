@@ -123,12 +123,13 @@ ls /usr/bin/ |grep obfs
 # Client
 ```shell
 sudo apt-get update -qq && sudo apt-get install -y shadowsocks-libev
-#nohup ss-local -c $YOUR_CONFIG & >/dev/null
-nohup ss-local -c seoul22.json & >/dev/null
-# for macos
+#nohup ss-local -c $YOUR_CONFIG >/dev/null &
+nohup ss-local -c seoul22.json > /dev/null &
+# For macos
 brew install shadowsocks-libev v2ray-plugin simple-obfs
-ss-local -c seoul22.json --plugin v2ray-plugin
-ss-local -c taiwan-one.json --plugin obfs-local
+# ss-local -c seoul22.json --plugin v2ray-plugin
+# ss-local -c taiwan-one.json --plugin obfs-local
+nohup ss-local -c taiwan-one.json --plugin obfs-local > /dev/null &
 ```
 [Firefox](https://supporthost.in/how-to-install-shadowsocks-on-ubuntu/)
 ref. https://github.com/didibaba/shadowsocks-client-on-Ubuntu
