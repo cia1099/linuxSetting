@@ -12,9 +12,10 @@
 6. 重启ssh服务：systemctl restart ssh
 * In client input:
 ```shell
-ssh root@34.81.142.165 #taiwan-one
+ssh root@35.206.218.39 #tw-gcp
 ssh root@34.23.156.164 #usa-free
 ```
+使用gcp的VM要注意安装的操作系统，Ubuntu不能用密码登入ssh，要安装Debian系统才可以密码登入ssh。还有gcp的防火墙记得要新增规则，细节操作参考[gcp最轻量设定](#gcp)。
 
 # Connect Instance with SSH
 ```shell
@@ -112,13 +113,13 @@ ls /usr/bin/ |grep obfs
 }
 ```
 
-* check
+* ##### Check listening ports are availiable in server
+In client terminal:
 ```shell
-/etc/init.d/shadowsocks status
-/etc/init.d/shadowsocks restart
-/etc/init.d/shadowsocks stop
-/etc/init.d/shadowsocks start
+nc -z -w 5 <server_ip> <used_port>
+#nc -z -w 5 35.206.218.39 55123 #tw-gcp
 ```
+https://stackoverflow.com/questions/52509512/how-can-i-verify-that-the-shadowsocks-server-is-ready
 
 # Client
 ```shell
@@ -199,10 +200,35 @@ curl -6 icanhazip.com
     "plugin_opts": "obfs=http;obfs-host=www.baidu.com"
 }
 ```
+<span id="gcp"></span>
+# GCP最轻量设定
+* #### 新增防火墙规则
+进入gcp网页，从侧边栏进入
+<kbd>VPC network</kbd>&#8594;<kbd>Firewall</kbd>&#8594;<kbd>CREATE FIREWALL RULE</kbd>\
+新增好了一个规则的`tag`后，就可以在VM的<kbd>Edit</kbd>里面`Network tags`项目输入你定义的规则的`tag`名称。\
+https://www.geeksforgeeks.org/how-to-open-port-in-gcp-vm/
 
+* #### 最轻量便宜的方案
+1. 在安装操作系统的disk，记得选择standard磁碟硬盘。
+2. 在VM的`Network`项目，要展开`Network interfaces`列表内的`default`，里面有一个项目`Network Service Tier`要选择`Standard`，才会是最便宜的方案。
+
+* #### 生成`ssh-key`
+想要产生登入服务器，某个用户登入的key，可以用`ssh-keygen`指令；如果省略<user_name>则会用本地电脑的用户名：
+```shell
+ssh-keygen -t rsa -f ~/.ssh/<key_filename> -C <user_name>
+#ssh-keygen -t rsa -f ~/.ssh/gcp_rsa -C cia1099
+```
+生成好公钥的`~/.ssh/<key_filename>.pub`贴上到VM的编辑页里的`Security and access`中`SSH Keys`点<kbd>ADD ITEM</kbd>:
+```shell
+# 直接复制这个内容全部到gcp的ssh key
+cat ~/.ssh/<key_filename>.pub
+# 连线通过本地私钥
+ssh -i ~/.ssh/<key_filename> <user_name>@<ip_address>
+```
+参考[方法2：ssh -i](https://ithelp.ithome.com.tw/articles/10251134)
 
 ---
-#Useless
+# Useless
 
 # Firewall
 sudo vi /etc/ssh/sshd_config
@@ -219,15 +245,18 @@ ref. https://teddysun.com/342.html
 
 ref. https://www.youtube.com/watch?v=y3FL_GI28mY&t=2s
 # start server
+```shell
 shadowsocks-rust.ssserver -s "[::]:55123" -m "aes-256-gcm" -k "hello" -v
-
+```
 # 後臺運行
-nohup shadowsocks-rust.ssserver -s "[::]:55123" -m "aes-256-gcm" -k "hello" -v & >/dev/null
+```shell
+nohup shadowsocks-rust.ssserver -s "[::]:55123" -m "aes-256-gcm" -k "hello" -v > /dev/null &
 
 shadowsocks-rust.ssserver -p 55123 -m aes-256-cfb -k test123 -d start 
-
+```
 
 # kill server
+```shell
 killall ssserver
-
+```
 ref. https://linuxconfig.org/how-to-use-curl-to-get-public-ip-address
