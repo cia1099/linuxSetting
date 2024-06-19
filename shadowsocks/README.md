@@ -228,7 +228,7 @@ curl -6 icanhazip.com
         * 内部端口：内部设备的服务端口（例如，80用于HTTP）。
         * 通常内部和外部用一样的端口方便。
 
-<img src="https://github.com/cia1099/linuxSetting/blob/raw/img/forwarding.png" style="width:800px;height:300px;"/>
+<img src="https://github.com/cia1099/linuxSetting/raw/master/img/forwarding.png" style="width:800px;height:300px;"/>
 
 ## Setting Hotspot shared
 只使用`nmcli`来开启AP模式。NetworkManager本身就能够处理大多数的AP配置，不需要额外的`hostapd`。以下是具体步骤：
