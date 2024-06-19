@@ -12,7 +12,7 @@
 6. 重启ssh服务：systemctl restart ssh
 * In client input:
 ```shell
-ssh root@35.206.218.39 #tw-gcp
+ssh root@150.116.206.116 #myHome
 ssh root@34.23.156.164 #usa-free
 ```
 使用gcp的VM要注意安装的操作系统，Ubuntu不能用密码登入ssh，要安装Debian系统才可以密码登入ssh。还有gcp的防火墙记得要新增规则，细节操作参考[gcp最轻量设定](#gcp)。
@@ -22,6 +22,15 @@ ssh root@34.23.156.164 #usa-free
 chmod 400 <download_key_file>
 ssh -i "test2.pem" ubuntu@ec2-3-39-224-5.ap-northeast-2.compute.amazonaws.com
 ssh -i "aws_key.pem" ubuntu@ec2-13-125-5-7.ap-northeast-2.compute.amazonaws.com
+```
+* ##### 中断卡住的SSH会话在服务器里
+```sh
+who #查看谁在会话
+# 删除所有人
+sudo pkill -KILL -u $(who | awk '{print $1}' | sort | uniq)
+#sudo pkill -9 -t pts/*
+# 删除谁
+sudo pkill -9 -t pts/<id>
 ```
 # Remember set available port range
 ref. https://www.vpndada.com/how-to-setup-shadowsocks-server-on-amazon-ec2/
@@ -130,7 +139,7 @@ nohup ss-local -c seoul22.json > /dev/null &
 brew install shadowsocks-libev v2ray-plugin simple-obfs
 # ss-local -c seoul22.json --plugin v2ray-plugin
 # ss-local -c taiwan-one.json --plugin obfs-local
-nohup ss-local -c taiwan-one.json --plugin obfs-local > /dev/null &
+nohup ss-local -c myHome.json --plugin obfs-local > /dev/null &
 ```
 [Firefox](https://supporthost.in/how-to-install-shadowsocks-on-ubuntu/)
 ref. https://github.com/didibaba/shadowsocks-client-on-Ubuntu
@@ -200,6 +209,78 @@ curl -6 icanhazip.com
     "plugin_opts": "obfs=http;obfs-host=www.baidu.com"
 }
 ```
+---
+## Access Router Devices Externally
+要通过外部IP地址访问连接到你的路由器的设备，你需要进行端口转发和动态DNS设置。以下是具体步骤：
+
+1. 获取你的外部IP地址
+你的外部IP地址是你在互联网上的唯一标识符。你可以通过以下方法获取：
+    * 访问`curl cip.cc`或类似的网站。
+    * 在路由器的管理界面中查看WAN设置。
+
+2. 配置路由器的端口转发
+端口转发允许外部请求通过特定端口访问你的内部设备。
+    * 登录到你的路由器管理界面（通常是通过在浏览器地址栏中输入192.168.66.1或192.168.x.1）。
+    * 找到“端口转发”或“虚拟服务器”设置。
+    * 添加新的端口转发规则：
+        * 外部端口：你希望用于外部访问的端口号（例如，8080）。
+        * 内部IP地址：你内部设备的IP地址（例如，192.168.66.100），内部地址要查看`ifconfig`在被router连接的设备，有时候router的界面会没显示。
+        * 内部端口：内部设备的服务端口（例如，80用于HTTP）。
+        * 通常内部和外部用一样的端口方便。
+
+<img src="https://github.com/cia1099/linuxSetting/blob/raw/img/forwarding.png" style="width:800px;height:300px;"/>
+
+## Setting Hotspot shared
+只使用`nmcli`来开启AP模式。NetworkManager本身就能够处理大多数的AP配置，不需要额外的`hostapd`。以下是具体步骤：
+1. 步骤 1：创建新的热点连接
+
+___建议直接使用Ubuntu GUI来建立热点，这样第一步可以跳过，除非热点的设定档名称(Hotspot)想换别的。___
+```sh
+sudo nmcli connection add type wifi ifname <your_wifi_interface> con-name Hotspot autoconnect no ssid <Your_SSID>
+sudo nmcli c modify Hotspot ipv4.method shared 802-11-wireless.mode ap
+sudo nmcli c modify Hotspot wifi-sec.key-mgmt wpa-psk wifi-sec.psk <Your_Password>
+```
+替换以下内容：
+* <your_wifi_interface>：替换为你的无线网卡接口名称，例如wlp2s0。
+* <Your_SSID>：替换为你想要的Wi-Fi名称。
+* <Your_Password>：替换为你想要的Wi-Fi密码。
+* `con-name`参数是连接设定档的名称，可以自定义，预设是Hotspot。
+2. 步骤 2：设定连接5G模式，和自动连接
+5G模式是a
+```sh
+sudo nmcli c modify Hotspot connection.autoconnect yes 802-11-wireless.band a 802-11-wireless.channel 149
+# 查看热点相关设定参数
+nmcli c show Hotspot |grep ipv4
+```
+使用`iw list`查看网络卡支援5G频段，看Frequencies内容；也能检查是否能开AP模式：
+```sh
+Frequencies:
+        * 5180.0 MHz [36] (20.0 dBm) (no IR)
+        * 5200.0 MHz [40] (20.0 dBm) (no IR)
+        * 5220.0 MHz [44] (20.0 dBm) (no IR)
+        * 5240.0 MHz [48] (20.0 dBm) (no IR)
+        # ...
+        * 5745.0 MHz [149] (20.0 dBm)
+        * 5765.0 MHz [153] (20.0 dBm) (no IR)
+        * 5785.0 MHz [157] (20.0 dBm)
+        * 5805.0 MHz [161] (20.0 dBm) (no IR)
+        * 5825.0 MHz [165] (20.0 dBm) (no IR)
+```
+后面有(no IR)的频段就是不支援，所以上述例子只能选择`802-11-wireless.channel`为149或157。
+3. 步骤 3：连接热点设定档
+```sh
+sudo nmcli c down Hotspot #断开热点，每次调整热点后，都要断开重连
+sudo nmcli c up Hotspot
+
+nmcli d #查看连接设备
+nmcli d show wlp2s0 #查看设备wlp2s0
+iw dev wlp2s0 info #检查发射频段
+```
+refs.:
+https://ubuntu.com/core/docs/networkmanager/edit-connections\
+read://https_www.fosslinux.com/?url=https%3A%2F%2Fwww.fosslinux.com%2F127522%2Fcreate-a-wireless-access-point-on-ubuntu.htm
+
+---
 <span id="gcp"></span>
 # GCP最轻量设定
 * #### 新增防火墙规则
