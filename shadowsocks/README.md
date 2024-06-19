@@ -227,8 +227,7 @@ curl -6 icanhazip.com
         * 内部IP地址：你内部设备的IP地址（例如，192.168.66.100），内部地址要查看`ifconfig`在被router连接的设备，有时候router的界面会没显示。
         * 内部端口：内部设备的服务端口（例如，80用于HTTP）。
         * 通常内部和外部用一样的端口方便。
-
-<img src="https://github.com/cia1099/linuxSetting/raw/master/img/forwarding.png" style="width:800px;height:300px;"/>
+        <img src="https://github.com/cia1099/linuxSetting/raw/master/img/forwarding.png" style="width:640px;height:300px;"/>
 
 ## Setting Hotspot shared
 只使用`nmcli`来开启AP模式。NetworkManager本身就能够处理大多数的AP配置，不需要额外的`hostapd`。以下是具体步骤：
@@ -275,6 +274,8 @@ sudo nmcli c up Hotspot
 nmcli d #查看连接设备
 nmcli d show wlp2s0 #查看设备wlp2s0
 iw dev wlp2s0 info #检查发射频段
+nmcli c show #查看有哪些连接设定档
+nmcli c delete <name> #删除设定档
 ```
 refs.:
 https://ubuntu.com/core/docs/networkmanager/edit-connections\
