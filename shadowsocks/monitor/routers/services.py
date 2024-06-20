@@ -1,3 +1,5 @@
+import asyncio
+from bs4 import BeautifulSoup
 from fastapi import APIRouter
 from httpx import AsyncClient
 
@@ -39,24 +41,51 @@ def with_login(func: callable):
     return wrapper
 
 
+def parse_goform(html: str) -> list[dict]:
+    body_soup = BeautifulSoup(html, "lxml")
+    table_div = body_soup.find("div", class_="table_data table_data12")
+    soup = BeautifulSoup(str(table_div), "lxml")
+    # 提取表头
+    # header = [th.get_text() for th in soup.find_all("th") if th.get_text()]
+    protocol = {"UDP": 3, "TCP": 4, "BOTH": 254}
+    # 提取表格内容
+    rows = soup.find_all("tr")[2:]  # 跳过前两行表头
+    data = []
+    for i, row in enumerate(rows):
+        cells = row.find_all("td")
+        if len(cells) > 0:  # 跳过空行
+            entry = {
+                "PortForwardingCreateRemove": 0,
+                "PortForwardingLocalIp": cells[0].get_text(),
+                "PortForwardingLocalStartPort": int(cells[1].get_text()),
+                "PortForwardingLocalEndPort": int(cells[2].get_text()),
+                "PortForwardingExtStartPort": int(cells[3].get_text()),
+                "PortForwardingExtEndPort": int(cells[4].get_text()),
+                "PortForwardingProtocol": protocol[cells[5].get_text()],
+                "PortForwardingDesc": cells[6].get_text(),
+                "PortForwardingEnabled": 1,  # cells[7].get_text(),
+                "PortForwardingApply": 2,
+                "PortForwardingTable": i,  # which row in table
+                "OverlapError": 0,
+            }
+            data.append(entry)
+    return data
+
+
 @with_login
-async def update_router(async_client: AsyncClient):
-    body = {
-        "PortForwardingCreateRemove": 0,
-        "PortForwardingLocalIp": "192.168.66.103",
-        "PortForwardingLocalStartPort": 22,
-        "PortForwardingLocalEndPort": 23,
-        "PortForwardingExtStartPort": 22,
-        "PortForwardingExtEndPort": 23,
-        "PortForwardingProtocol": 254,  # 3 UDP,4 TCP, 254 BOTH
-        "PortForwardingDesc": "ssh8888",
-        "PortForwardingEnabled": 1,
-        "PortForwardingApply": 2,
-        "PortForwardingTable": 1,  # which row in table
-        "OverlapError": 0,
-    }
-    res = await async_client.post("/goform/RgForwarding", data=body)
-    location = res.headers["Location"]
+async def update_router(async_client: AsyncClient, interface: str):
+    ip_addr = get_LAN_address(interface)
+    if ip_addr == "-1":
+        return
+    res = await async_client.get("/RgForwarding.asp")
+    data = parse_goform(res.text)
+    for d in data:
+        d["PortForwardingLocalIp"] = ip_addr
+    #     _ = await async_client.post("/goform/RgForwarding", data=d)
+    await asyncio.gather(
+        *(async_client.post("/goform/RgForwarding", data=d) for d in data)
+    )
+    # location = res.headers["Location"]
 
 
 @router.get("/lan")
