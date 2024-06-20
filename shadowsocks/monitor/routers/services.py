@@ -1,5 +1,6 @@
 import asyncio
 from bs4 import BeautifulSoup
+from typing import AsyncGenerator
 from fastapi import APIRouter
 from httpx import AsyncClient
 
@@ -41,16 +42,14 @@ def with_login(func: callable):
     return wrapper
 
 
-def parse_goform(html: str) -> list[dict]:
+async def parse_goform(html: str) -> AsyncGenerator[dict, any]:
     body_soup = BeautifulSoup(html, "lxml")
     table_div = body_soup.find("div", class_="table_data table_data12")
     soup = BeautifulSoup(str(table_div), "lxml")
-    # 提取表头
-    # header = [th.get_text() for th in soup.find_all("th") if th.get_text()]
     protocol = {"UDP": 3, "TCP": 4, "BOTH": 254}
     # 提取表格内容
     rows = soup.find_all("tr")[2:]  # 跳过前两行表头
-    data = []
+    # data = []
     for i, row in enumerate(rows):
         cells = row.find_all("td")
         if len(cells) > 0:  # 跳过空行
@@ -68,23 +67,20 @@ def parse_goform(html: str) -> list[dict]:
                 "PortForwardingTable": i,  # which row in table
                 "OverlapError": 0,
             }
-            data.append(entry)
-    return data
+            # data.append(entry)
+            yield entry
+    # return data
 
 
 @with_login
-async def update_router(async_client: AsyncClient, interface: str):
-    ip_addr = get_LAN_address(interface)
+async def update_router(async_client: AsyncClient, ip_addr: str):
     if ip_addr == "-1":
         return
+
     res = await async_client.get("/RgForwarding.asp")
-    data = parse_goform(res.text)
-    for d in data:
-        d["PortForwardingLocalIp"] = ip_addr
-    #     _ = await async_client.post("/goform/RgForwarding", data=d)
-    await asyncio.gather(
-        *(async_client.post("/goform/RgForwarding", data=d) for d in data)
-    )
+    async for data in parse_goform(res.text):
+        data["PortForwardingLocalIp"] = ip_addr
+        _ = await async_client.post("/goform/RgForwarding", data=data)
     # location = res.headers["Location"]
 
 
