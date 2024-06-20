@@ -1,10 +1,10 @@
-import asyncio
 from bs4 import BeautifulSoup
 from typing import AsyncGenerator
 from fastapi import APIRouter
 from httpx import AsyncClient
 
 router = APIRouter()
+switch_url = "http://192.168.66.1"
 
 
 def get_LAN_address(interface: str) -> str:
@@ -31,9 +31,7 @@ def with_login(func: callable):
     }
 
     async def wrapper(*args):
-        async with AsyncClient(
-            base_url="http://192.168.66.1", follow_redirects=False
-        ) as ac:
+        async with AsyncClient(base_url=switch_url, follow_redirects=False) as ac:
             await ac.post("/goform/login", data=login_body)
             response = await func(ac, *args)
             await ac.get("/logout.asp")
