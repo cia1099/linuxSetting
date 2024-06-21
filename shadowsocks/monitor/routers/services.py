@@ -28,7 +28,7 @@ def get_pc_name() -> str:
         cmd, shell=True, check=False, stdout=subprocess.PIPE, text=True
     )
     pc_name = result.stdout.strip()
-    return pc_name
+    return pc_name if "." not in pc_name else pc_name.replace(".", " ")
 
 
 def with_login(func: callable):
