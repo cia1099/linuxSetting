@@ -43,7 +43,7 @@ if __name__ == "__main__":
     p.run()
     while True:
         # now = datetime.now().strftime("%H:%M:%S")
-        # print(f"what time is this? {now}")
+        # print(f"what \x1b[92mtime\x1b[0m is this? \x1b[92m{now}\x1b[0m")
         asyncio.run(check_ip(interface))
         time.sleep(args.time)
 

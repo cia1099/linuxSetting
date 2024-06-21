@@ -57,7 +57,7 @@ async def check_ip(interface: str):
         sync_task = loop.run_in_executor(executor, log_changed, info)
     # --- concurrent sync and async functions
     await asyncio.gather(sync_task, update_router(ip_addr))
-    log_changed(info)
+    # log_changed(info) # debug
 
 
 async def show_table(res):
