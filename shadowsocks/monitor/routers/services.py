@@ -2,14 +2,13 @@ from bs4 import BeautifulSoup
 from typing import AsyncGenerator
 from fastapi import APIRouter
 from httpx import AsyncClient
+import subprocess
 
 router = APIRouter()
 switch_url = "http://192.168.66.1"
 
 
 def get_LAN_address(interface: str) -> str:
-    import subprocess
-
     cmd = "ifconfig %s | grep 'inet ' | awk '{ print $2 }' | cut -d/ -f1" % interface
     try:
         result = subprocess.run(
@@ -21,6 +20,15 @@ def get_LAN_address(interface: str) -> str:
         return ip_addr
     except:
         return "-1"
+
+
+def get_pc_name() -> str:
+    cmd = "hostname"
+    result = subprocess.run(
+        cmd, shell=True, check=False, stdout=subprocess.PIPE, text=True
+    )
+    pc_name = result.stdout.strip()
+    return pc_name
 
 
 def with_login(func: callable):
@@ -75,11 +83,26 @@ async def update_router(async_client: AsyncClient, ip_addr: str):
     if ip_addr == "-1":
         return
 
+    my_name = get_pc_name()
     res = await async_client.get("/RgForwarding.asp")
     async for data in parse_goform(res.text):
         data["PortForwardingLocalIp"] = ip_addr
-        _ = await async_client.post("/goform/RgForwarding", data=data)
+        data["PortForwardingDesc"] = my_name
+        await async_client.post("/goform/RgForwarding", data=data)
     # location = res.headers["Location"]
+
+
+@with_login
+async def get_switch_ip(async_client: AsyncClient) -> str:
+    my_name = get_pc_name()
+    res = await async_client.get("/RgForwarding.asp")
+    ip_set = set()
+    async for data in parse_goform(res.text):
+        ip_set.add(data["PortForwardingLocalIp"])
+    if len(ip_set) > 0:
+        return list(ip_set)[0]
+    else:
+        return ""
 
 
 @router.get("/lan")

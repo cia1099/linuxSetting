@@ -31,13 +31,13 @@ if __name__ == "__main__":
     interface = args.interface
     if get_LAN_address(interface) == "-1":
         print(
-            f"\x1b[4mCan't find valid \x1b[36mip address\x1b[0m\x1b[4m in interface \x1b[1m\x1b[31m{interface}\x1b[0m"
+            f"\x1b[4mCan't find valid \x1b[36mip address\x1b[0m\x1b[4m in interface: \x1b[1m\x1b[31m{interface}\x1b[0m"
         )
         assert get_LAN_address(interface) != "-1"
 
     p = Process(
         target=os.system,
-        args=("nohup uvicorn main:app --reload --port 50050 > /dev/null &",),
+        args=("nohup uvicorn main:app --host 0.0.0.0 --port 50050 > /dev/null &",),
     )
     p.daemon = True
     p.run()

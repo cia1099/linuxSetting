@@ -2,7 +2,7 @@ import asyncio, json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
-from routers.services import get_LAN_address, update_router, parse_goform
+from routers.services import get_LAN_address, get_switch_ip, update_router, parse_goform
 
 
 def log_changed(info: dict):
@@ -37,19 +37,21 @@ def load_record_ip() -> str:
 async def check_ip(interface: str):
     loop = asyncio.get_running_loop()
     with ThreadPoolExecutor() as executor:
-        load_id_task = loop.run_in_executor(executor, load_record_ip)
-        get_id_task = loop.run_in_executor(executor, get_LAN_address, interface)
-    done, _ = await asyncio.wait({load_id_task, get_id_task})
-    cached_ip, ip_addr = (d.result() for d in done)
+        load_ip_task = loop.run_in_executor(executor, load_record_ip)
+        get_lan_task = loop.run_in_executor(executor, get_LAN_address, interface)
+
+    done, _ = await asyncio.wait({load_ip_task, get_switch_ip(), get_lan_task})
+    cached_ip, switch_ip, ip_addr = (d.result() for d in done)
 
     # print(f"cached_ip is {cached_ip}")
+    # print(f"switch_ip is {switch_ip}")
     # print(f"current ip is {ip_addr}")
-    if ip_addr == cached_ip or ip_addr == "-1":
+    if ip_addr == switch_ip or ip_addr == "-1":
         return
     info = {
         "asctime": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
         "new": ip_addr,
-        "old": cached_ip,
+        "old": switch_ip,
     }
     with ThreadPoolExecutor() as executor:
         sync_task = loop.run_in_executor(executor, log_changed, info)
