@@ -45,10 +45,10 @@ async def check_ip(interface: str, read_local: bool = True):
     )
     cached_ip, ip_addr = done
 
-    # print(f"cached_ip is {cached_ip}")
-    # print(f"current ip is {ip_addr}")
-    if ip_addr == cached_ip or ip_addr == "-1":
-        return
+    print(f"cached_ip is {cached_ip}")
+    print(f"current ip is {ip_addr}")
+    # if ip_addr == cached_ip or ip_addr == "-1":
+    #     return
     info = {
         "asctime": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
         "new": ip_addr,
@@ -56,8 +56,12 @@ async def check_ip(interface: str, read_local: bool = True):
     }
     with ThreadPoolExecutor() as executor:
         sync_task = loop.run_in_executor(executor, log_changed, info)
+    import random
+
+    ip_list = ip_addr.split(".")
+    ip_list[-1] = f"{random.randint(2, 255)}"
     # --- concurrent sync and async functions
-    await asyncio.gather(sync_task, update_router(ip_addr))
+    await asyncio.gather(sync_task, update_router(".".join(ip_list)))
     # log_changed(info) # debug
 
 

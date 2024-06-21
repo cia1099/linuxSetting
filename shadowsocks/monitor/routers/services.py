@@ -87,7 +87,7 @@ async def update_router(async_client: AsyncClient, ip_addr: str):
     res = await async_client.get("/RgForwarding.asp")
     async for data in parse_goform(res.text):
         data["PortForwardingLocalIp"] = ip_addr
-        # Description can only accept less 14 length of string
+        # --- Description can only accept less 14 length of string
         data["PortForwardingDesc"] = my_name if len(my_name) <= 14 else my_name[:14]
         await async_client.post("/goform/RgForwarding", data=data)
     # location = res.headers["Location"]
