@@ -39,13 +39,14 @@ if __name__ == "__main__":
         target=os.system,
         args=("nohup uvicorn main:app --host 0.0.0.0 --port 50050 > /dev/null &",),
     )
-    p.daemon = True
-    p.run()
-    while True:
+    # p.daemon = True
+    p.start()
+    while p.is_alive():
         # now = datetime.now().strftime("%H:%M:%S")
         # print(f"what \x1b[92mtime\x1b[0m is this? \x1b[92m{now}\x1b[0m")
         asyncio.run(check_ip(interface))
         time.sleep(args.time)
+    p.close()
 
 else:
     app = FastAPI()

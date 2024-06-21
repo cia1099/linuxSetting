@@ -40,8 +40,8 @@ async def check_ip(interface: str):
         load_ip_task = loop.run_in_executor(executor, load_record_ip)
         get_lan_task = loop.run_in_executor(executor, get_LAN_address, interface)
 
-    done, _ = await asyncio.wait({load_ip_task, get_switch_ip(), get_lan_task})
-    cached_ip, switch_ip, ip_addr = (d.result() for d in done)
+    done = await asyncio.gather(load_ip_task, get_switch_ip(), get_lan_task)
+    cached_ip, switch_ip, ip_addr = done
 
     # print(f"cached_ip is {cached_ip}")
     # print(f"switch_ip is {switch_ip}")
