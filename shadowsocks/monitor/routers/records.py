@@ -45,7 +45,7 @@ async def check_ip(interface: str, read_local: bool = True):
     )
     cached_ip, ip_addr = done
 
-    detail = f"load from {"log" if read_local else "switch"}"
+    detail = "load from %s" % "log" if read_local else "switch"
     print(f"cached_ip is {cached_ip} ({detail})")
     print(f"current ip is {ip_addr}")
     if ip_addr == cached_ip or ip_addr == "-1":
@@ -54,7 +54,7 @@ async def check_ip(interface: str, read_local: bool = True):
         "asctime": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
         "new": ip_addr,
         "old": cached_ip,
-        "detail": detail
+        "detail": detail,
     }
     with ThreadPoolExecutor() as executor:
         sync_task = loop.run_in_executor(executor, log_changed, info)

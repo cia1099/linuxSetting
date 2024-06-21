@@ -34,6 +34,7 @@ if __name__ == "__main__":
             f"\x1b[4mCan't find valid \x1b[36mip address\x1b[0m\x1b[4m in interface: \x1b[1m\x1b[31m{interface}\x1b[0m"
         )
         assert get_LAN_address(interface) != "-1"
+    assert isinstance(args.time, int)
 
     p = Process(
         target=os.system,
