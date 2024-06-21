@@ -1,5 +1,8 @@
 # Set up shadowsocks server in home
 
+This project is used to keep continuously modified LAN address which was distributed by switcher randomly. For example, when shutdown, reboot or power abruptly stop, the address will be resetting.\
+So we have to take an automatic calibration program to supervise what LAN is it in present. Moreover we need to tell switcher to revise the forwarding address.
+
 ## Access Router Devices Externally
 要通过外部IP地址访问连接到你的路由器的设备，你需要进行端口转发和动态DNS设置。以下是具体步骤：
 
@@ -72,3 +75,43 @@ refs.:\
 https://ubuntu.com/core/docs/networkmanager/edit-connections
 
 read://https_www.fosslinux.com/?url=https%3A%2F%2Fwww.fosslinux.com%2F127522%2Fcreate-a-wireless-access-point-on-ubuntu.htm
+
+---
+## How to Install
+```sh
+git clone --sparse --depth=1 https://github.com/cia1099/linuxSetting.git
+cd linuxSetting
+git sparse-checkout add shadowsocks/monitor
+cd shadowsocks/monitor
+python3 -m venv venv
+source venv/bin/activate
+python -m pip install pipenv
+python -m pipenv install
+```
+* ### Set start up program
+使用systemd服务，在`/usr/lib/systemd/system/`目录下创建一个新的服务文件。\
+`sudo vim /usr/lib/systemd/system/monitor.service`\
+在文件中添加以下内容：
+```sh
+[Unit]
+Description=Keep forwarding LAN address on this machine
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/yoyo/linuxSetting/shadowsocks/monitor/cmd.sh
+Restart=on-failure
+User=yoyo
+
+[Install]
+WantedBy=multi-user.target
+```
+重新加载systemd管理器配置，并启用`monitor.service`服务：
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable monitor.service
+sudo systemctl start monitor.service
+# 语法检查monitor.service的内容
+systemd-analyze verify /usr/lib/systemd/system/monitor.service
+systemctl status monitor.service
+```
