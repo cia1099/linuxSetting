@@ -39,13 +39,17 @@ if __name__ == "__main__":
         target=os.system,
         args=("nohup uvicorn main:app --host 0.0.0.0 --port 50050 > /dev/null &",),
     )
-    # p.daemon = True
-    p.start()
-    while p.is_alive():
+    p.daemon = True
+    p.run()
+    i = 0
+    while True:
         # now = datetime.now().strftime("%H:%M:%S")
         # print(f"what \x1b[92mtime\x1b[0m is this? \x1b[92m{now}\x1b[0m")
-        asyncio.run(check_ip(interface))
+        asyncio.run(check_ip(interface, i % (args.time * 10) > 0))
         time.sleep(args.time)
+        i += 1
+        if i // (args.time * 10) > 0:
+            i = 0
     p.close()
 
 else:

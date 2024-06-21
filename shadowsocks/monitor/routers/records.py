@@ -34,24 +34,25 @@ def load_record_ip() -> str:
     return json.loads(last_line)["new"]
 
 
-async def check_ip(interface: str):
+async def check_ip(interface: str, read_local: bool = True):
     loop = asyncio.get_running_loop()
     with ThreadPoolExecutor() as executor:
         load_ip_task = loop.run_in_executor(executor, load_record_ip)
         get_lan_task = loop.run_in_executor(executor, get_LAN_address, interface)
 
-    done = await asyncio.gather(load_ip_task, get_switch_ip(), get_lan_task)
-    cached_ip, switch_ip, ip_addr = done
+    done = await asyncio.gather(
+        load_ip_task if read_local else get_switch_ip(), get_lan_task
+    )
+    cached_ip, ip_addr = done
 
     # print(f"cached_ip is {cached_ip}")
-    # print(f"switch_ip is {switch_ip}")
     # print(f"current ip is {ip_addr}")
-    if ip_addr == switch_ip or ip_addr == "-1":
+    if ip_addr == cached_ip or ip_addr == "-1":
         return
     info = {
         "asctime": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
         "new": ip_addr,
-        "old": switch_ip,
+        "old": cached_ip,
     }
     with ThreadPoolExecutor() as executor:
         sync_task = loop.run_in_executor(executor, log_changed, info)
