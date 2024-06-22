@@ -4,8 +4,8 @@ from datetime import datetime
 from multiprocessing import Process
 from fastapi import FastAPI, HTTPException
 from routers.records import check_ip
+from routers.records import router as record_router
 from routers.services import get_LAN_address
-from routers.services import router as service_router
 
 
 if __name__ == "__main__":
@@ -54,4 +54,4 @@ if __name__ == "__main__":
 
 else:
     app = FastAPI()
-    app.include_router(service_router)
+    app.include_router(record_router)

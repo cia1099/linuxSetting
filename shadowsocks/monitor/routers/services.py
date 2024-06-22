@@ -1,10 +1,9 @@
 from bs4 import BeautifulSoup
 from typing import AsyncGenerator
-from fastapi import APIRouter
 from httpx import AsyncClient
 import subprocess
 
-router = APIRouter()
+
 switch_url = "http://192.168.66.1"
 
 
@@ -104,8 +103,3 @@ async def get_switch_ip(async_client: AsyncClient) -> str:
         return list(ip_set)[0]
     else:
         return ""
-
-
-@router.get("/lan")
-async def get_LAN(interface: str = ""):
-    return {"LAN_address": get_LAN_address(interface)}
