@@ -25,6 +25,22 @@
             -webkit-text-fill-color: transparent;
             /* 隐藏实际文字颜色 */
         }
+
+        /* 暗色模式样式 */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1f1f2f;
+                color: azure;
+            }
+        }
+
+        /* 亮色模式样式 */
+        @media (prefers-color-scheme: light) {
+            body {
+                background-color: azure;
+                color: #1f1f2f;
+            }
+        }
     </style>
 </head>
 
