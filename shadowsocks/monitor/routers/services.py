@@ -27,7 +27,8 @@ def get_pc_name() -> str:
         cmd, shell=True, check=False, stdout=subprocess.PIPE, text=True
     )
     pc_name = result.stdout.strip()
-    return pc_name
+    # Description can only accept less 14 length of string
+    return pc_name if len(pc_name) <= 14 else pc_name[:14]
 
 
 def with_login(func: callable):
@@ -78,16 +79,20 @@ async def parse_goform(html: str) -> AsyncGenerator[dict, any]:
 
 
 @with_login
-async def update_router(async_client: AsyncClient, ip_addr: str):
+async def update_router(async_client: AsyncClient, ip_addr: str, appoint: bool = False):
     if ip_addr == "-1":
         return
 
     my_name = get_pc_name()
     res = await async_client.get("/RgForwarding.asp")
     async for data in parse_goform(res.text):
+        if appoint and data["PortForwardingDesc"] != my_name:
+            continue
+        else:
+            data["PortForwardingDesc"] = my_name
+
         data["PortForwardingLocalIp"] = ip_addr
-        # Description can only accept less 14 length of string
-        data["PortForwardingDesc"] = my_name if len(my_name) <= 14 else my_name[:14]
+
         await async_client.post("/goform/RgForwarding", data=data)
     # location = res.headers["Location"]
 
@@ -98,6 +103,8 @@ async def get_switch_ip(async_client: AsyncClient) -> str:
     res = await async_client.get("/RgForwarding.asp")
     ip_set = set()
     async for data in parse_goform(res.text):
+        if data["PortForwardingDesc"] != my_name:
+            continue
         ip_set.add(data["PortForwardingLocalIp"])
     if len(ip_set) > 0:
         return list(ip_set)[0]
