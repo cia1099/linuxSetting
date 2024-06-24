@@ -68,7 +68,7 @@ async def check_ip(interface: str, read_local: bool = True):
     with ThreadPoolExecutor() as executor:
         sync_task = loop.run_in_executor(executor, log_changed, info)
     # --- concurrent sync and async functions
-    await asyncio.gather(sync_task, update_router(ip_addr))
+    await asyncio.gather(sync_task, update_router(ip_addr, len(cached_ip) > 0))
     # log_changed(info) # debug
 
 

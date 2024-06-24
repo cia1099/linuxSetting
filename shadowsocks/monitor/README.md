@@ -3,6 +3,24 @@
 This project is used to keep continuously modified LAN address which was distributed by switcher randomly. For example, when shutdown, reboot or power abruptly stop, the address will be resetting.\
 So we have to take an automatic calibration program to supervise what LAN is it in present. Moreover we need to tell switcher to revise the forwarding address.
 
+## Web App
+网页能够在手机主屏幕上显示自定义图标，是通过一种叫做“Web App Manifest”的文件来实现的。这种文件允许网站开发者为网页应用提供元数据，包括名称、图标、启动 URL 和其他信息，从而使网页应用在添加到主屏幕时表现得像一个原生应用。
+
+1. 创建 [Web App Manifest](https://github.com/cia1099/linuxSetting/blob/master/shadowsocks/monitor/manifest.json) 文件。
+注意在`manifest.json`文件中，icons 的 src 属性可以使用网络图片的 URL。
+2. 引用 Manifest 文件
+在你的 HTML 文件的\<head>部分[引用这个manifest](https://github.com/cia1099/linuxSetting/blob/master/shadowsocks/monitor/templates/record_base.html?plain=#L12)文件。
+3. iPhone等设备
+因为苹果设备不完全支持 Web App Manifest 文件中的所有功能，还需要在[HTML文件](https://github.com/cia1099/linuxSetting/blob/master/shadowsocks/monitor/templates/record_base.html?plain=#L14-L18)的 \<head> 部分添加一些额外的 \<link> 标签:
+* apple-touch-icon：为 iOS 主屏幕图标设置图标。
+* apple-mobile-web-app-capable：启用 Web 应用程序的全屏显示。
+* apple-mobile-web-app-status-bar-style：设置状态栏的样式。
+* apple-mobile-web-app-title：设置添加到主屏幕后显示的应用标题。
+
+苹果在HTML文件中的图标连接用URL，本地端似乎抓不到。
+
+
+
 ## Access Router Devices Externally
 要通过外部IP地址访问连接到你的路由器的设备，你需要进行端口转发和动态DNS设置。以下是具体步骤：
 
