@@ -2,10 +2,13 @@ import asyncio, argparse
 import time, os
 from datetime import datetime
 from multiprocessing import Process
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Response, status
+from fastapi.exception_handlers import http_exception_handler
+
 from routers.records import check_ip
 from routers.records import router as record_router
 from routers.services import get_LAN_address
+from templates import templates
 
 
 if __name__ == "__main__":
@@ -70,6 +73,17 @@ async def assets_png(image_name: str):
             return Response(f.read(), media_type="image/png")
     except:
         raise HTTPException(404, detail=image_name)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handle_templates(req, e: HTTPException):
+    match e.status_code:
+        case status.HTTP_404_NOT_FOUND:
+            return templates.TemplateResponse(
+                "404.html", {"request": req, "detail": e.detail}
+            )
+
+    return await http_exception_handler(req, e)
 
 
 """

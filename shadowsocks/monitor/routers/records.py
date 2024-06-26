@@ -4,14 +4,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Generator
 
+# from main import templates
 from models.record import Record
-
-from routers.services import get_LAN_address, get_switch_ip, update_router, parse_goform
+from routers.services import get_LAN_address, get_switch_ip, update_router
 from fastapi import APIRouter, Request, HTTPException, status
-from fastapi.templating import Jinja2Templates
+from templates import templates
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates/")
 
 
 def log_changed(info: dict):
@@ -104,7 +103,7 @@ async def get_LAN(req: Request, interface: str = ""):
             detail="The interface doesn't exist",
         )
     return templates.TemplateResponse(
-        "records.html",
+        "404.html",
         {
             "request": req,
             "ip_addr": ip_addr,

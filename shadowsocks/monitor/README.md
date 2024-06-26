@@ -98,6 +98,10 @@ read://https_www.fosslinux.com/?url=https%3A%2F%2Fwww.fosslinux.com%2F127522%2Fc
 注册[Cloudns](https://www.cloudns.net)申请一个免费的网域，再用[Cloudflare](https://www.cloudflare.com)代理解析这个域名，将网域解析到想要的IP地址。\
 ref. https://www.youtube.com/watch?v=0YFZRggVqtI&t=66s
 
+* 检测DNS运作的网站：
+[WhatsMyDNS](https://www.whatsmydns.net/)\
+[Boce](https://www.boce.com/)
+
 ## Port rewording
 可以使用 iptables 进行端口转发，让 80 端口的请求转发到一个高端口，比如 8080。
 ```sh
