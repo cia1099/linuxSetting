@@ -98,6 +98,21 @@ read://https_www.fosslinux.com/?url=https%3A%2F%2Fwww.fosslinux.com%2F127522%2Fc
 注册[Cloudns](https://www.cloudns.net)申请一个免费的网域，再用[Cloudflare](https://www.cloudflare.com)代理解析这个域名，将网域解析到想要的IP地址。\
 ref. https://www.youtube.com/watch?v=0YFZRggVqtI&t=66s
 
+## Port rewording
+可以使用 iptables 进行端口转发，让 80 端口的请求转发到一个高端口，比如 8080。
+```sh
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+#查看现有的规则
+sudo iptables -t nat -L --line-numbers
+#删除特定的转发规则，假设这条规则在 PREROUTING 链的第 1 行
+#sudo iptables -t nat -D PREROUTING 1
+sudo iptables -t nat -L #确认规则已删除
+#保存更改
+sudo sh -c "iptables-save > /etc/iptables/rules.v4"
+```
+如果你只是输入`sudo iptables-save`，它不会自动保存到文件，而是会将规则列表打印到屏幕上。\
+如果要删除，直接删除`/etc/iptables/rules.v4`这个文件即可；因为原本就没有这个文件。
+
 ---
 ## How to Install
 ```sh
