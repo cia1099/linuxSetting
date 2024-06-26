@@ -108,10 +108,10 @@ async def get_LAN(req: Request, interface: str = ""):
         {
             "request": req,
             "ip_addr": ip_addr,
-            "records": [
+            "records": (
                 Record.from_dict(json.loads(r))
                 for r in read_file_reverse("ip_records.log")
-            ],
+            ),
         },
     )
 

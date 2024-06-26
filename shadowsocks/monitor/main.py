@@ -2,7 +2,7 @@ import asyncio, argparse
 import time, os
 from datetime import datetime
 from multiprocessing import Process
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from routers.records import check_ip
 from routers.records import router as record_router
 from routers.services import get_LAN_address
@@ -55,3 +55,37 @@ if __name__ == "__main__":
 else:
     app = FastAPI()
     app.include_router(record_router)
+
+
+@app.get("/manifest.json")
+async def get_json():
+    with open(f"manifest.json", "r") as f:
+        return Response(f.read(), media_type="application/json")
+
+
+@app.get("/assets/{image_name}.png")
+async def assets_png(image_name: str):
+    try:
+        with open(f"assets/{image_name}.png", "rb") as f:
+            return Response(f.read(), media_type="image/png")
+    except:
+        raise HTTPException(404, detail=image_name)
+
+
+"""
+TODO: fastAPI URL can't parse "/xx/xx" in a str, 
+you have to separate individually '/' in manual
+
+
+@app.get("/{script_name}.js")
+async def get_script(script_name: str):
+    with open(f"{script_name}.js", "r") as f:
+        return Response(f.read(), media_type="application/javascript")
+
+
+@app.get("/{style_name}.css")
+async def get_style(style_name: str):
+    with open(f"{style_name}.css", "r") as f:
+        return Response(f.read(), media_type="text/css")
+
+"""
