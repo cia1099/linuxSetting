@@ -1,10 +1,10 @@
 {
-    "server":"122.51.165.185",
-    "server_port":63210,
-    "local_address":"127.0.0.1",
-    "local_port":1080,
-    "password":"smoke755",
-    "timeout":300,
-    "method":"rc4-md5",
-    "fast_open":true
+    "server": "111.231.14.210",
+    "server_port": 63210,
+    "local_address": "127.0.0.1",
+    "local_port": 1080,
+    "password": "smoke755",
+    "timeout": 300,
+    "method": "rc4-md5",
+    "fast_open": true
 }

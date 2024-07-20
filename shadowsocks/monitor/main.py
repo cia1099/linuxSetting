@@ -1,4 +1,5 @@
 import asyncio, argparse
+from pathlib import Path
 import time, os
 from datetime import datetime
 from multiprocessing import Process
@@ -7,6 +8,7 @@ from fastapi.exception_handlers import http_exception_handler
 
 from routers.records import check_ip
 from routers.records import router as record_router
+from routers.profile import router as profile_router
 from routers.services import get_LAN_address
 from templates import templates
 
@@ -58,6 +60,7 @@ if __name__ == "__main__":
 else:
     app = FastAPI()
     app.include_router(record_router)
+    app.include_router(profile_router)
 
 
 @app.get("/manifest.json")
@@ -66,11 +69,12 @@ async def get_json():
         return Response(f.read(), media_type="application/json")
 
 
-@app.get("/assets/{image_name}.png")
+@app.get("/assets/{image_name}")
 async def assets_png(image_name: str):
     try:
-        with open(f"assets/{image_name}.png", "rb") as f:
-            return Response(f.read(), media_type="image/png")
+        p = Path(f"assets/{image_name}")
+        with open(str(p), "rb") as f:
+            return Response(f.read(), media_type=f"image/{p.suffix[1:]}")
     except:
         raise HTTPException(404, detail=image_name)
 
