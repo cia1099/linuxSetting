@@ -41,7 +41,7 @@ async def video_stream(request: Request, filename: str):
     p = Path(f"profile/media/{filename}")
 
     if not p.exists():
-        raise HTTPException(404, detail="Video file not found")
+        raise HTTPException(404, detail=f"Video({file_path}) file not found")
 
     # 获取HTTP Range请求头
     range_header = request.headers.get("range")

@@ -103,7 +103,7 @@ async def get_LAN(req: Request, interface: str = ""):
             detail="The interface doesn't exist",
         )
     return templates.TemplateResponse(
-        "404.html",
+        "records.html",
         {
             "request": req,
             "ip_addr": ip_addr,
