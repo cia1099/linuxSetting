@@ -35,7 +35,7 @@ def iter_file(file_path: str, chunk_size: int = 1024 * 1024) -> Iterator[bytes]:
             yield data
 
 
-@router.get("/profile/media/{filename}")
+@router.get("/profile/media")
 async def video_stream(request: Request, filename: str):
     file_path = f"profile/media/{filename}"
     p = Path(f"profile/media/{filename}")
