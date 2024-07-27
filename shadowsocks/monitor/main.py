@@ -5,6 +5,7 @@ from datetime import datetime
 from multiprocessing import Process
 from fastapi import FastAPI, HTTPException, Response, status
 from fastapi.exception_handlers import http_exception_handler
+from fastapi.middleware.cors import CORSMiddleware
 
 from routers.records import check_ip
 from routers.records import router as record_router
@@ -61,6 +62,18 @@ else:
     app = FastAPI()
     app.include_router(record_router)
     app.include_router(profile_router)
+    # # 配置 CORS
+    # origins = [
+    #     "http://localhost:64994",  # 允许本地开发服务器访问
+    #     "http://www.cia1099.cloudns.ch",  # 允许指定的生产服务器访问
+    # ]
+    # app.add_middleware(
+    #     CORSMiddleware,
+    #     allow_origins=origins,  # 允许的来源
+    #     allow_credentials=True,  # 允许发送 Cookie
+    #     allow_methods=["*"],  # 允许的 HTTP 方法
+    #     allow_headers=["*"],  # 允许的 HTTP 头
+    # )
 
 
 @app.get("/manifest.json")
