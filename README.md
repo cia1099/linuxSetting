@@ -723,6 +723,11 @@ git clone \
 ;
 cd cmake-cookbook
 git sparse-checkout add chapter-10
+# 显示sparse
+git sparse-checkout list
+# 删除sparse
+git sparse-checkout set ''
+rm -rf chapter-10
 ```
 ##### git remote new branch to track
 当clone只有单独一个分支的话，`origin`只有追踪当初clone的那个分支，因此需要新增一个新的remote来追踪别的分支
