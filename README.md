@@ -931,13 +931,13 @@ services:
       - 49001:9001
       # ROS master:
       - 11311:11311
-
 ```
-之後要建立容器只要在`docker-compose.yml`的目錄下指令：
+之後要建立容器只要在`docker-compose.yaml`的目錄下指令：
 ```shell
-docker-compose down && docker-compose up
-# 如果本來container就沒有這個<NAME>直接up就行，不用down
-docker-compose up
+docker compose up -d #创建并在后台运行.yaml内的容器
+docker compose down #停止并删除.yaml内所有的容器
+docker compose start #运行.yaml的容器
+docker compose stop #停止.yaml的容器
 ```
 
 [docker 複製檔案參考資料](https://www.cloudsavvyit.com/10520/how-to-run-gui-applications-in-a-docker-container/)
