@@ -23,6 +23,7 @@
   * [git 操作](#git)
   * [docker 操作](#docker)
   * [vscode 套件安装和设定](#vscode)
+  * [安装rvm和修复Cocoapods](#rvm)
   * [Ubuntu 安装 Apple Sillicon](#arm)
   * [制作USB开机磁盘](#usb_boot)
   * [基本操作，參考實驗樓《Linux基礎入門》](#shiyanlou)
@@ -1006,6 +1007,21 @@ docker compose stop #停止.yaml的容器
 https://code.visualstudio.com/docs/languages/identifiers
 
 https://stackoverflow.com/questions/29973619/how-to-associate-a-file-extension-with-a-certain-language-in-vs-code
+
+<span id="rvm"><span>
+### 安装rvm和修复Cocoapods
+有时候Cocoapods会挂掉，这时候就重装rvm。最新版的ruby会编译失败，[需要指定openssl的版本为1.1](https://github.com/postmodern/ruby-install/issues/473)。
+```sh
+rvm implode #删除rvm
+curl -sSL https://get.rvm.io | bash -s stable #重新安装rvm
+export PATH="$PATH:$HOME/.rvm/bin"
+rvm install 3.3.5 -- --with-openssl-dir=/opt/homebrew/opt/openssl@1.1
+rvm use 3.3.5
+gem install cocoapods
+pod env
+flutter docotr
+```
+[返回目錄](#contents)
 
 <span id="arm"></span>
 ### Ubuntu install Apple Sillicon

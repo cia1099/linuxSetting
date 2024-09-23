@@ -1,4 +1,3 @@
-
 alias text="open -a TextEdit"
 alias ll="ls -alF"
 alias simulator="open -a Simulator --args -CurrentDeviceUDID"
@@ -24,6 +23,8 @@ export PATH=$PATH:/Users/otto/Downloads/flutter/bin
 export CHROME_EXECUTABLE=/Applications/Microsoft\ Edge.app/Contents/MacOS/Microsoft\ Edge
 # export PUB_HOSTED_URL=https://pub.flutter-io.cn
 # export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+# <<< dart dev bin
+export PATH=$PATH:$HOME/.pub-cache/bin
 
 # close all emulator
 export PATH=$PATH:/Users/otto/Library/Android/sdk/emulator:/Users/otto/Library/Android/sdk/platform-tools
@@ -37,6 +38,9 @@ close (){
         echo "ERROR: strange time detected: $1"
         fi
     fi
+}
+parse_git_branch() {
+ git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
 
@@ -69,7 +73,7 @@ if [ "i386" = $(arch) ]; then
     eval "$(/usr/local/bin/brew shellenv)"
     export PATH=$PATH:/usr/local/bin
 else
-    export PS1="%B%F{195}%n@%m%f%b:%F{103}%1~%f%# "
+    export PS1='%B%F{195}%n@%m%f%b:%F{103}%1~%f%# '
     eval "$(/opt/homebrew/bin/brew shellenv)"
     # remove certain path in PATH
     local NEWPATH=$( echo ${PATH} | tr -s ":" "\n" | grep -vwE "/usr/local/bin" | tr -s "\n" ":" | sed "s/:$//" )
