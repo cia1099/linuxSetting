@@ -1096,6 +1096,7 @@ https://apple.stackexchange.com/questions/55727/where-can-i-find-the-unicode-sym
 
 <span id="usb_boot"></span>
 ### 制作USB开机磁盘
+[Ubuntu下载](https://releases.ubuntu.com)，复制下载链接，直接用`wget`下载，不要用浏览器下载会很慢。\
 將 USB 隨身碟插入 Linux 的電腦中，查詢一下目前所有硬碟與 USB 隨身碟的狀況。
 ```shell
 lsblk
