@@ -10,11 +10,7 @@
 4. 修改参数：PasswordAuthentication yes
 5. 修改密码：passwd
 6. 重启ssh服务：systemctl restart ssh
-* In client input:
-```shell
-ssh root@150.116.206.116 #myHome
-ssh root@34.23.156.164 #usa-free
-```
+
 使用gcp的VM要注意安装的操作系统，Ubuntu不能用密码登入ssh，要安装Debian系统才可以密码登入ssh。还有gcp的防火墙记得要新增规则，细节操作参考[gcp最轻量设定](#gcp)。
 
 # Connect Instance with SSH
@@ -34,6 +30,60 @@ sudo pkill -9 -t pts/<id>
 ```
 # Remember set available port range
 ref. https://www.vpndada.com/how-to-setup-shadowsocks-server-on-amazon-ec2/
+
+# Create and use ssh key
+#### 1. Generate PEM key
+```sh
+ssh-keygen -t rsa -b 2048 -m PEM -f ~/.ssh/my_pem_key -C "Custom comment"
+# Do not format
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/my_key -C "<user>@<machine_name>"
+```
+* `-t rsa`: Specifies the type of key to create, which is RSA.
+* `-b 2048`: Specifies the number of bits in the key. 2048 is a common and secure key size.
+* `-m PEM`: Ensures the key is in PEM format.
+* `-f ~/.ssh/my_pem_key`: Specifies the file in which to save the private key (my_pem_key). You can choose a different file name or location if desired.
+
+**Set a passphrase** (optional). After running the command, you'll be prompted to enter a passphrase. This is optional but recommended for additional security.
+
+This command will generate two files:
+* `~/.ssh/my_pem_key`: Your private key (keep this secure and do not share it).
+* `~/.ssh/my_pem_key.pub`: Your public key (you will share this with the remote server).
+
+#### 2. Copy the Public Key to the Remote Server
+To use the newly generated PEM key for SSH access, you need to copy the public key to the `~/.ssh/authorized_keys` file on the remote server.\
+Copy the public key to the remote server using the ssh-copy-id command:
+```sh
+ssh-copy-id -i ~/.ssh/my_pem_key.pub <user>@<remote-server-ip>
+```
+If `ssh-copy-id` is not available, manually copy the public key:
+```sh
+scp ~/.ssh/my_pem_key.pub <user>@<remote-server-ip>:~/.ssh/authorized_keys
+```
+##### (Optional) Setting remote `sshd_conf` to enable multiple public keys
+```sh
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/my_pem_key.pub .ssh/authorized_keys
+# then
+sudo systemctl restart ssh
+```
+Create `~/.ssh/config` to make VScode can remote server
+```sh
+Host <server name (custom name)>
+  User <user>
+  HostName <remote-server-ip>
+  IdentityFile ~/.ssh/my_pem_key
+Host *
+  ForwardX11 yes
+  ForwardX11Trusted yes
+```
+
+#### 3. Connect to the Remote Server Using the Private Key
+```sh
+# Ensure your private key has the correct permissions
+chmod 600 ~/.ssh/my_pem_key
+ssh -i ~/.ssh/my_pem_key <user>@<remote-server-ip>
+```
+
 # Using C to deploy
 ```shell
 # for 22
@@ -45,7 +95,6 @@ ref. https://www.tititing.life/2020/10/11/ubuntu-20-04-shadowsocks-%E7%BF%BB%E7%
 ```shell
 wget --no-check-certificate https://raw.githubusercontent.com/M3chD09/shadowsocks-with-v2ray-plugin-install/master/ubuntu-ss-install.sh
 chmod +x ubuntu-ss-install.sh
-
 ```
 
 * 可以在`config.json`的`server`屬性直接用`0.0.0.0`接受所有IP數據。
