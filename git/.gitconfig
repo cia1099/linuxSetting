@@ -1,40 +1,46 @@
 [user]
-	email = otto.lin@patere.net
-	name = otto@Ubuntu20_04
+	# email = steven-ph@bobi.homes
+	# name = Steven Dante Torres
+  email = cia1099@gmail.com
+  name = Otto@AirM2
 
 [diff]
-	tool = kdiff3
-	guitool = kdiff3
-[difftool "kdiff3"]
-	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$LOCAL\" \"$REMOTE\"
-	path = /home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3
-	trustExitCode = false
-	prompt = false
+  tool = opendiff
+  guitool = opendiff
+# [difftool]
+#   prompt = false #general disable prompt
 [merge]
-	tool = kdiff3
+  tool = opendiff
+[alias]
+  tree = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
+[difftool "kdiff3"]
+	cmd = kdiff3 \"$LOCAL\" \"$REMOTE\"
+	trustExitCode = true
+	prompt = false
 [mergetool "kdiff3"]
-	cmd = '/home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3' \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
-	path = /home/cia1099/Downloads/kdiff3-0.9.98/releaseQt/kdiff3
+	cmd = /usr/local/sbin/kdiff3 \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
 	trustExitCode = false
 	keepBackup = false
-[alias]
-	tree = log --graph --decorate --pretty=oneline --abbrev-commit --all
-[http]
-	cookiefile = /home/cia1099/.gitcookies
 
-# >>>> vscode edition
-# [diff]
-# 	tool = vscode
-# 	guitool = vscode
-# [difftool "vscode"]
-# 	cmd = code --wait --diff $LOCAL $REMOTE
-# 	path = /usr/bin/code
-# 	prompt = false
-# [merge]
-# 	tool = vscode
-# [mergetool "vscode"]
-# 	cmd = code --wait $MERGED $REMOTE
-# 	path = /usr/bin/code
-# 	trustExitCode = false
-# 	keepBackup = false
-# ref. https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
+[difftool "opendiff"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path = /Applications/Xcode.app/Contents/Developer/usr/bin/opendiff
+  trustExitCode = true #kill the process
+  prompt = true
+[mergetool "opendiff"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = false #must save before confirm merge
+  keepBackup = false
+
+[difftool "code"]
+  cmd = code -n --disable-extensions --wait --diff $LOCAL $REMOTE
+  trustExitCode = true
+	prompt = false
+[mergetool "code"]
+  cmd = code -n --disable-extensions --wait -- --merge $LOCAL $REMOTE $BASE $MERGED
+  trustExitCode = false
+	keepBackup = false
+
+# [http]
+	# cookiefile = /home/cia1099/.gitcookies

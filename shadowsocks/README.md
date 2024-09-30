@@ -223,7 +223,7 @@ https://www.geeksforgeeks.org/how-to-open-port-in-gcp-vm/
 2. 在VM的`Network`项目，要展开`Network interfaces`列表内的`default`，里面有一个项目`Network Service Tier`要选择`Standard`，才会是最便宜的方案。
 
 <span id="ssh-keygen"></span>
-## 生成`ssh-key`
+* #### 生成`ssh-key`
 想要产生登入服务器，某个用户登入的key，可以用`ssh-keygen`指令；如果省略<user_name>则会用本地电脑的用户名：
 ```shell
 ssh-keygen -t rsa -f ~/.ssh/<key_filename> -C <user_name>
