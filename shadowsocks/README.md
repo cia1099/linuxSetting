@@ -174,7 +174,7 @@ ls /usr/bin/ |grep obfs
 * ##### Check listening ports are availiable in server
 In client terminal:
 ```shell
-nc -z -w 5 <server_ip> <used_port>
+nc -zw 1 <server_ip> <used_port>
 #nc -z -w 5 35.206.218.39 55123 #tw-gcp
 ```
 https://stackoverflow.com/questions/52509512/how-can-i-verify-that-the-shadowsocks-server-is-ready
@@ -298,8 +298,13 @@ sudo systemctl restart ssh.service
 * look config 
 cat /etc/shadowsocks.json
 * 如果你没有开放端口的话，需要防火墙将端口放开出来。
-sudo ufw allow 57878
+```sh
+sudo ufw allow 22/tcp comment 'SSH port'
+sudo ufw allow from any to any port 8325 proto tcp comment 'Shadowsocks server'
+sudo ufw allow from any to any port 8325 proto udp comment 'Shadowsocks server'
+```
 
+[ufw 相关指令](https://www.cyberciti.biz/faq/howto-adding-comments-to-ufw-firewall-rule/)
 ref. https://teddysun.com/342.html
 
 

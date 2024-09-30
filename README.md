@@ -853,6 +853,8 @@ vi .git/config # 移除 [submodule "grpc"] 那兩行
 `sudo usermod -aG docker $USER`
 
 * **为了使上述变更生效，请Restart**
+You can also run the following command to activate the changes to groups:
+`newgrp docker`
 
 ##### Container
 * 查看所有container

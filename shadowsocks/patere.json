@@ -1,0 +1,11 @@
+{
+    "server": "150.116.206.116",
+    "server_port": 8325,
+    "local_address": "127.0.0.1",
+    "local_port": 1080,
+    "password": "sonic747",
+    "timeout": 400,
+    "method": "chacha20-ietf-poly1305",
+    "fast_open": false,
+    "plugin": "ss-v2ray-plugin"
+}
