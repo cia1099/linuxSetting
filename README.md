@@ -1017,11 +1017,15 @@ https://stackoverflow.com/questions/29973619/how-to-associate-a-file-extension-w
 rvm implode #删除rvm
 curl -sSL https://get.rvm.io | bash -s stable #重新安装rvm
 export PATH="$PATH:$HOME/.rvm/bin"
-rvm install 3.3.5 -- --with-openssl-dir=/opt/homebrew/opt/openssl@1.1
-rvm use 3.3.5
+rvm install 3.4.1 -- --with-openssl-dir=/opt/homebrew/opt/openssl@1.1
+rvm use 3.4.1 # when get error, reopen a new ternimal
+rvm --default use 3.4.1
 gem install cocoapods
 pod env
-flutter docotr
+# Install flutter
+cd ~/Downloads
+git clone --depth=1 -b stable https://github.com/flutter/flutter.git
+flutter doctor
 ```
 [返回目錄](#contents)
 

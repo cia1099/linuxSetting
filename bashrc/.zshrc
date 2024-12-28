@@ -1,5 +1,5 @@
 alias text="open -a TextEdit"
-alias ll="ls -alF"
+alias ll="ls -alFh"
 alias simulator="open -a Simulator --args -CurrentDeviceUDID"
 alias ldd="otool -L"
 # <<< switch Rosetta
@@ -15,7 +15,7 @@ alias unproxy="unset http_proxy;unset https_proxy;unset all_proxy;unset no_proxy
 # export LANG=en_US.UTF-8
 
 # <<< vscode
-export PATH="$PATH:/usr/local/sbin"
+export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
 # <<< cmake
 export PATH=$PATH:/Applications/CMake.app/Contents/bin
 # <<< flutter
@@ -25,6 +25,8 @@ export CHROME_EXECUTABLE=/Applications/Microsoft\ Edge.app/Contents/MacOS/Micros
 # export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 # <<< dart dev bin
 export PATH=$PATH:$HOME/.pub-cache/bin
+# <<< kdiff3
+export PATH=$PATH:/usr/local/sbin
 
 # close all emulator
 export PATH=$PATH:/Users/otto/Library/Android/sdk/emulator:/Users/otto/Library/Android/sdk/platform-tools
