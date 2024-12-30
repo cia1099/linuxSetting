@@ -15,13 +15,13 @@
   tree = log --graph --decorate --pretty=oneline --abbrev-commit --all
 
 [difftool "kdiff3"]
-	cmd = kdiff3 \"$LOCAL\" \"$REMOTE\"
-	trustExitCode = true
-	prompt = false
+  cmd = kdiff3 \"$LOCAL\" \"$REMOTE\"
+  trustExitCode = true
+  prompt = false
 [mergetool "kdiff3"]
-	cmd = /usr/local/sbin/kdiff3 \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
-	trustExitCode = false
-	keepBackup = false
+  cmd = /usr/local/sbin/kdiff3 \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+  trustExitCode = false
+  keepBackup = false
 
 [difftool "opendiff"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
@@ -36,11 +36,11 @@
 [difftool "code"]
   cmd = code -n --disable-extensions --wait --diff $LOCAL $REMOTE
   trustExitCode = true
-	prompt = false
+  prompt = false
 [mergetool "code"]
   cmd = code -n --disable-extensions --wait -- --merge $LOCAL $REMOTE $BASE $MERGED
   trustExitCode = false
-	keepBackup = false
+  keepBackup = false
 
 # [http]
 	# cookiefile = /home/cia1099/.gitcookies
