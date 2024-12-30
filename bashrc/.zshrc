@@ -9,6 +9,9 @@ alias arm64="env /usr/bin/arch -arm64 /bin/zsh --login"
 alias socks5="networksetup -setsocksfirewallproxystate wi-fi"
 alias proxy="export http_proxy=socks5://127.0.0.1:1080;export https_proxy=socks5://127.0.0.1:1080;export all_proxy=socks5://127.0.0.1:1080;export no_proxy=socks5://127.0.0.1:1080"
 alias unproxy="unset http_proxy;unset https_proxy;unset all_proxy;unset no_proxy"
+# <<< fvm used the nearest configuration in flutter project
+alias ff="fvm flutter"
+alias fd="fvm dart"
 
 # You may need to manually set your language environment
 # when your system languange is not English
@@ -19,12 +22,16 @@ export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/
 # <<< cmake
 export PATH=$PATH:/Applications/CMake.app/Contents/bin
 # <<< flutter
-export PATH=$PATH:/Users/otto/Downloads/flutter/bin
+export PATH=$PATH:/Users/otto/fvm/versions/stable/bin
 export CHROME_EXECUTABLE=/Applications/Microsoft\ Edge.app/Contents/MacOS/Microsoft\ Edge
 # export PUB_HOSTED_URL=https://pub.flutter-io.cn
 # export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+## <<< fvm 
+export PATH=$PATH:/Users/otto/.fvm_flutter/bin
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /Users/otto/.dart-cli-completion/zsh-config.zsh ]] && . /Users/otto/.dart-cli-completion/zsh-config.zsh || true
 # <<< dart dev bin
-export PATH=$PATH:$HOME/.pub-cache/bin
+# export PATH=$PATH:$HOME/.pub-cache/bin
 # <<< kdiff3
 export PATH=$PATH:/usr/local/sbin
 
