@@ -776,6 +776,12 @@ refs:
 1. https://stackoverflow.com/questions/72253410/how-to-properly-use-xargs-with-cp
 2. https://stackoverflow.com/questions/947954/how-to-have-the-cp-command-create-any-necessary-folders-for-copying-a-file-to-a
 3. https://stackoverflow.com/questions/15606955/how-can-i-make-git-show-a-list-of-the-files-that-are-being-tracked
+
+##### 贴上别的分支上的差异档案
+```sh
+git checkout branch1
+git restore --source=branch2 $(git diff --name-only branch1 branch2)
+```
 ##### 縮小git的pack容量
 * https://aleen42.gitbooks.io/wiki/content/git/shrink_sizes/shrink_sizes.html
 * https://github.com/18F/C2/issues/439
@@ -960,7 +966,7 @@ docker compose stop #停止.yaml的容器
 * 查看所有images:
 `docker images -a`
 * 刪除某個image
-`docker image rm <image-REPOSITORY:with-TAG>`
+`docker rmi <image-REPOSITORY:with-TAG>`
 
 * [DockerFile寫法](https://www.jmoisio.eu/en/blog/2020/06/01/building-cpp-containers-using-docker-and-cmake/)
 

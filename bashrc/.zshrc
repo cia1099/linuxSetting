@@ -24,8 +24,11 @@ export PATH=$PATH:/Applications/CMake.app/Contents/bin
 # <<< flutter
 export PATH=$PATH:/Users/otto/fvm/versions/stable/bin
 export CHROME_EXECUTABLE=/Applications/Microsoft\ Edge.app/Contents/MacOS/Microsoft\ Edge
+export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
 # export PUB_HOSTED_URL=https://pub.flutter-io.cn
 # export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+# <<< flutterfire_cli
+export PATH=$PATH:$HOME/.pub-cache/bin
 ## <<< fvm 
 export PATH=$PATH:/Users/otto/.fvm_flutter/bin
 ## Completion scripts setup. Remove the following line to uninstall
@@ -89,6 +92,9 @@ else
     export PATH=$NEWPATH
 fi
 
+# <<< git completion
+autoload -Uz compinit && compinit
+
 # <<< Optional environmental variable
 # --- You can set one of the optional three formats:
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
@@ -98,3 +104,11 @@ fi
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
+
+# <<< gcloud cli needs
+export CLOUDSDK_PYTHON=/Users/otto/miniconda3/envs/qq/bin/python3
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/otto/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/otto/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/otto/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/otto/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
